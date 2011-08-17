@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'PgTest' target in the 'PgTest' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
