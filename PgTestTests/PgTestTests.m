@@ -7,6 +7,7 @@
 //
 
 #import "PgTestTests.h"
+#import "PgSQLConnectionInfo.h"
 
 @implementation PgTestTests
 
@@ -24,9 +25,16 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testConnectionInfo
 {
-    STFail(@"Unit tests are not implemented yet in PgTestTests");
+    NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
+    PgSQLConnectionInfo *info = [PgSQLConnectionInfo connectionInfoWithURL:aUrl];
+    STAssertNotNil(info,@"info object should be allocated in PgTestTests");
+    STAssertTrue([info.hostname isEqualToString:@"localhost"],@"Hostname does not match");
+    STAssertTrue([info.port isEqualToString:@"5432"],@"Hostname does not match");
+    STAssertTrue([info.dbname isEqualToString:@"TestDB"],@"Hostname does not match");
+    STAssertTrue([info.username isEqualToString:@"testuser"],@"Hostname does not match");
+    STAssertTrue([info.password isEqualToString:@"testtest"],@"Hostname does not match");
 }
 
 @end

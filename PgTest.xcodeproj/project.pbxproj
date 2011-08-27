@@ -34,6 +34,8 @@
 		7BACACFE140905C500AE8C10 /* PgSQLTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACACFD140905C500AE8C10 /* PgSQLTransaction.m */; };
 		7BACAD01140905DD00AE8C10 /* PgSQLRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD00140905DC00AE8C10 /* PgSQLRelationship.m */; };
 		7BACAD04140905F100AE8C10 /* PgSQLContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD03140905F100AE8C10 /* PgSQLContext.m */; };
+		7BACAD0614090FF900AE8C10 /* TestDB.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7BACAD0514090FF900AE8C10 /* TestDB.plist */; };
+		7BACAD071409142F00AE8C10 /* PgSQLConnectionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACACE21409000900AE8C10 /* PgSQLConnectionInfo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -595,6 +597,7 @@
 		7BACAD00140905DC00AE8C10 /* PgSQLRelationship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLRelationship.m; path = PgTest/Classes/PgSQLRelationship.m; sourceTree = "<group>"; };
 		7BACAD02140905F000AE8C10 /* PgSQLContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLContext.h; path = PgTest/Classes/PgSQLContext.h; sourceTree = "<group>"; };
 		7BACAD03140905F100AE8C10 /* PgSQLContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLContext.m; path = PgTest/Classes/PgSQLContext.m; sourceTree = "<group>"; };
+		7BACAD0514090FF900AE8C10 /* TestDB.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestDB.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -698,6 +701,7 @@
 			children = (
 				7B5E26B913FB7921007D9F5B /* PgTestTests-Info.plist */,
 				7B5E26BA13FB7921007D9F5B /* InfoPlist.strings */,
+				7BACAD0514090FF900AE8C10 /* TestDB.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1632,6 +1636,7 @@
 				7B5E269F13FB7920007D9F5B /* InfoPlist.strings in Resources */,
 				7B5E26A513FB7921007D9F5B /* Credits.rtf in Resources */,
 				7B5E26AB13FB7921007D9F5B /* MainMenu.xib in Resources */,
+				7BACAD0614090FF900AE8C10 /* TestDB.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1691,6 +1696,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B5E26BF13FB7921007D9F5B /* PgTestTests.m in Sources */,
+				7BACAD071409142F00AE8C10 /* PgSQLConnectionInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
