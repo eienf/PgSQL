@@ -54,6 +54,16 @@
     con.connectionInfo = info;
     [con connect];
     STAssertTrue([con connectionStatus]==CONNECTION_OK,@"connection failed.");
+    PgSQLResult *res = [con executeString:@"select count(*) from author"];
+    STAssertNotNil(res,@"res must be allocated.");
+    if ( res == nil ) return;
+    char *result;
+    result = [res getValue];
+    printf("[1]result = %s\n",result);
+    STAssertTrue(result!=NULL&&strcmp(result,"8")==0,@"count does not match");
+    result = [res getValue:0 column:0];
+    printf("[2]result = %s\n",result);
+    STAssertTrue(result!=NULL&&strcmp(result,"8")==0,@"count does not match");
     [con disconnect];
     [con release];
 }

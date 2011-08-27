@@ -7,6 +7,7 @@
 //
 
 #import "PgSQLConnection.h"
+#import "PgSQLResult.h"
 
 #define BUFF_SIZE   (1024)
 
@@ -39,9 +40,6 @@
                                [self.connectionInfo cUsername:username lenght:sizeof(username)],
                                [self.connectionInfo cPassword:passname lenght:sizeof(passname)]
                                );
-//	PGconn *con = PQsetdbLogin(
-//                               "", "", NULL, NULL, "TestDB", "testuser", "testtest"
-//                               );
 	if ( PQstatus(con) == CONNECTION_BAD ) {
 		fprintf(stderr,"connection failed.\n");
 		fprintf(stderr,"%s\n",PQerrorMessage(con));
@@ -54,7 +52,7 @@
 
 - (void)disconnect
 {
-    if ( [self transactionStatus] == CONNECTION_OK ) {
+    if ( [self connectionStatus] == CONNECTION_OK ) {
         PQfinish(conn_);
     }
 }
@@ -66,7 +64,7 @@
 
 - (BOOL)isConnected
 {
-    return ( [self transactionStatus] == CONNECTION_OK );
+    return ( [self connectionStatus] == CONNECTION_OK );
 }
 
 - (int)connectionStatus
@@ -90,7 +88,23 @@
 
 - (PgSQLResult*)executeCommand:(PgSQLCommand*)aCommand
 {
-    return nil;
+    const char *sql = "";
+	PGresult *res = PQexecParams(conn_,
+                                 sql,
+                                 0, // int nNumParams,
+                                 NULL,// const Oid *paramTypes,
+                                 NULL, // const char * const *paramValues,
+                                 NULL, // const int *paramLengths,
+                                 NULL, // const int *paramFormats,
+                                 1 // int resultFormat
+                                 );
+    ExecStatusType status = PQresultStatus(res);
+	if ( status != PGRES_TUPLES_OK && status != PGRES_COMMAND_OK) {
+		fprintf(stderr,"%s\n",PQresultErrorMessage(res));
+		PQclear(res);
+        return nil;
+	}
+    return [PgSQLResult resultWithResult:res];
 }
 
 - (PgSQLResult*)executeString:(NSString*)aString
@@ -99,12 +113,13 @@
     const char *sql = [aString cStringUsingEncoding:NSUTF8StringEncoding];
 	PGresult *res = PQexec(conn_,sql);
     ExecStatusType status = PQresultStatus(res);
-	if ( status == PGRES_TUPLES_OK || status == PGRES_COMMAND_OK) {
+	if ( status != PGRES_TUPLES_OK && status != PGRES_COMMAND_OK) {
 		fprintf(stderr,"%s\n",PQresultErrorMessage(res));
 		PQclear(res);
         return nil;
 	}
-    return nil;
+	printf("EXECUTE SUCCESS!!\n");
+    return [PgSQLResult resultWithResult:res];
 }
 
 

@@ -8,6 +8,32 @@
 
 #import <Foundation/Foundation.h>
 
+#include "libpq-fe.h"
+
 @interface PgSQLResult : NSObject
+{
+    PGresult *result_;
+    int numOfTuples_;
+    int numOfFields_;
+    int currentRow_;
+    int currentField_;
+}
+@property(nonatomic,assign,readonly) int numOfTuples;
+@property(nonatomic,assign,readonly) int numOfFields;
+@property(nonatomic,assign,readonly) int currentRow;
+@property(nonatomic,assign,readonly) int currentField;
+
++ (id)resultWithResult:(PGresult*)res;
+- (void)setResult:(PGresult*)res;
+- (void)clear;
+- (int)resultStatus;
+- (NSString*)resultMessage;
+- (BOOL)firstRow;
+- (BOOL)nextRow;
+- (BOOL)hasNextRow;
+- (BOOL)nextField;
+- (BOOL)hasNexField;
+- (char *)getValue;
+- (char *)getValue:(int)row column:(int)column;
 
 @end
