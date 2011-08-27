@@ -8,6 +8,26 @@
 
 #import <Foundation/Foundation.h>
 
+#include "libpq-fe.h"
+
+#import "PgSQLConnectionInfo.h"
+#import "PgSQLCommand.h"
+#import "PgSQLResult.h"
+
 @interface PgSQLConnection : NSObject
+{
+    PgSQLConnectionInfo *connectionInfo_;
+    PGconn *conn_;
+}
+@property(nonatomic,retain,readwrite) PgSQLConnectionInfo *connectionInfo;
+@property(nonatomic,assign,readonly) PGconn *conn;
+
+- (void)connect;
+- (void)disconnect;
+- (BOOL)isConnected;
+- (int)connectionStatus;
+- (NSString*)connectionMessage;
+- (int)transactionStatus;
+- (PgSQLResult*)executeCommand:(PgSQLCommand*)aCommand;
 
 @end

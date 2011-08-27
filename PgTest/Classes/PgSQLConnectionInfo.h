@@ -25,4 +25,10 @@
 - (id)initWithURL:(NSURL*)aUrl;
 + (PgSQLConnectionInfo*)connectionInfoWithURL:(NSURL*)aUrl;
 
+- (const char *)cHostname:(char *)buff lenght:(size_t)length;
+- (const char *)cPort:(char *)buff lenght:(size_t)length;
+- (const char *)cDbname:(char *)buff lenght:(size_t)length;
+- (const char *)cUsername:(char *)buff lenght:(size_t)length;
+- (const char *)cPassword:(char *)buff lenght:(size_t)length;
+
 @end

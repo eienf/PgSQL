@@ -63,4 +63,42 @@
     return [anObject autorelease];
 }
 
+#pragma cstring
+
+- (const char *)cHostname:(char *)buff lenght:(size_t)length
+{
+    BOOL result = [self.hostname getCString:buff maxLength:length encoding:NSUTF8StringEncoding];
+    if ( result ) return buff;
+    return NULL;
+}
+
+- (const char *)cPort:(char *)buff lenght:(size_t)length
+{
+    BOOL result = [self.port getCString:buff maxLength:length encoding:NSUTF8StringEncoding];
+    if ( result ) return buff;
+    return NULL;
+}
+
+- (const char *)cDbname:(char *)buff lenght:(size_t)length
+{
+    BOOL result = [self.dbname getCString:buff maxLength:length encoding:NSUTF8StringEncoding];
+    if ( result ) return buff;
+    return NULL;
+}
+
+- (const char *)cUsername:(char *)buff lenght:(size_t)length
+{
+    BOOL result = [self.username getCString:buff maxLength:length encoding:NSUTF8StringEncoding];
+    if ( result ) return buff;
+    return NULL;
+}
+
+- (const char *)cPassword:(char *)buff lenght:(size_t)length
+{
+    BOOL result = [self.password getCString:buff maxLength:length encoding:NSUTF8StringEncoding];
+    if ( result ) return buff;
+    return NULL;
+}
+
+
 @end

@@ -35,7 +35,6 @@
 		7BACAD01140905DD00AE8C10 /* PgSQLRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD00140905DC00AE8C10 /* PgSQLRelationship.m */; };
 		7BACAD04140905F100AE8C10 /* PgSQLContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD03140905F100AE8C10 /* PgSQLContext.m */; };
 		7BACAD0614090FF900AE8C10 /* TestDB.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7BACAD0514090FF900AE8C10 /* TestDB.plist */; };
-		7BACAD071409142F00AE8C10 /* PgSQLConnectionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACACE21409000900AE8C10 /* PgSQLConnectionInfo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1696,7 +1695,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B5E26BF13FB7921007D9F5B /* PgTestTests.m in Sources */,
-				7BACAD071409142F00AE8C10 /* PgSQLConnectionInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
