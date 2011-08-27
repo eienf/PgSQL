@@ -9,7 +9,9 @@
 #import <Cocoa/Cocoa.h>
 
 @interface PgAppDelegate : NSObject <NSApplicationDelegate>
-
-@property (strong) IBOutlet NSWindow *window;
+{
+    NSWindow *_window;
+}
+@property (assign) IBOutlet NSWindow *window;
 
 @end
