@@ -65,6 +65,13 @@
     result = [res getValue:0 column:0];
     printf("[2]result = %s\n",result);
     STAssertTrue(result!=NULL&&strcmp(result,"8")==0,@"count does not match");
+    res = [PgSQLCommand executeTextFormat:@"select * from author where author_id = $1;"
+                                   params:[NSArray arrayWithObject:@"1"]
+                               connection:con];
+    if ( res == nil ) return;
+    STAssertTrue([res numOfTuples]==1,@"numOfTuples");
+    STAssertTrue([res numOfFields]==2,@"numOfFields");
+    [res printResult];
     [con disconnect];
     [con release];
 }

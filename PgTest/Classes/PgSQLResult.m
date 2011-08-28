@@ -51,13 +51,19 @@
     return PQresultStatus(result_);
 }
 
+- (BOOL)isOK
+{
+    int status = [self resultStatus];
+    return (status == PGRES_COMMAND_OK) || (status == PGRES_TUPLES_OK);
+}
+
 - (NSString*)resultMessage
 {
     return [NSString stringWithCString:PQresultErrorMessage(result_)
                               encoding:NSUTF8StringEncoding];
 }
 
-- (BOOL)firstRow
+- (BOOL)resetRow
 {
     if ( numOfTuples_ > 0 ) {
         currentRow_ = 0;
@@ -110,6 +116,52 @@
 - (char *)getValue:(int)row column:(int)column
 {
     return PQgetvalue(result_, row, column);
+}
+
+- (BOOL)getIsBinary
+{
+    return PQfmod(result_, currentField_) == 1;
+}
+
+- (int)getType
+{
+    return PQftype(result_, currentField_);
+}
+
+- (char *)getFieldName:(int)column
+{
+    return PQfname(result_, column);
+}
+
+#pragma mark DEBUG
+
+- (void)printResult
+{
+    if ( ![self isOK] ) {
+        NSLog(@"%s (%d) %@",__func__,[self resultStatus],[self resultMessage]);
+        return;   
+    }
+    if ( ![self resetRow] ) {
+        NSLog(@"%s () NO DATA AVAILABLE",__func__);
+        return;   
+    }
+    do {
+        for ( int i = 0; i < numOfFields_; i++ ) {
+            printf("%s ",[self getFieldName:i]);
+        }
+        printf("\n");
+        do {
+            BOOL isBinary = [self getIsBinary];
+            int type = [self getType];
+            char *value = [self getValue];
+            if ( isBinary ) {
+                printf("%d ",type);
+            } else {
+                printf("%s ",value);
+            }
+        } while ([self nextField]);
+        printf("\n");
+    } while ([self nextRow]);
 }
 
 

@@ -28,12 +28,14 @@
 - (void)clear;
 - (int)resultStatus;
 - (NSString*)resultMessage;
-- (BOOL)firstRow;
+- (BOOL)resetRow;
 - (BOOL)nextRow;
 - (BOOL)hasNextRow;
 - (BOOL)nextField;
 - (BOOL)hasNexField;
 - (char *)getValue;
 - (char *)getValue:(int)row column:(int)column;
+- (BOOL)isOK;
+- (void)printResult;
 
 @end

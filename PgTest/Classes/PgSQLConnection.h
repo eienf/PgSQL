@@ -29,6 +29,5 @@
 - (int)connectionStatus;
 - (NSString*)connectionMessage;
 - (int)transactionStatus;
-- (PgSQLResult*)executeCommand:(PgSQLCommand*)aCommand;
 
 @end

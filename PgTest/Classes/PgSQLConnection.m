@@ -86,26 +86,5 @@
     return PQtransactionStatus(conn_);
 }
 
-- (PgSQLResult*)executeCommand:(PgSQLCommand*)aCommand
-{
-    const char *sql = "";
-	PGresult *res = PQexecParams(conn_,
-                                 sql,
-                                 0, // int nNumParams,
-                                 NULL,// const Oid *paramTypes,
-                                 NULL, // const char * const *paramValues,
-                                 NULL, // const int *paramLengths,
-                                 NULL, // const int *paramFormats,
-                                 1 // int resultFormat
-                                 );
-    ExecStatusType status = PQresultStatus(res);
-	if ( status != PGRES_TUPLES_OK && status != PGRES_COMMAND_OK) {
-		fprintf(stderr,"%s\n",PQresultErrorMessage(res));
-		PQclear(res);
-        return nil;
-	}
-    return [PgSQLResult resultWithResult:res];
-}
-
 
 @end
