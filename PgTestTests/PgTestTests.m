@@ -10,6 +10,8 @@
 #import "PgSQLConnectionInfo.h"
 #import "PgSQLConnection.h"
 #import "PgSQLCommand.h"
+#import "PgSQLResult.h"
+#import "PgSQLValue.h"
 #import "string.h"
 
 @implementation PgTestTests
@@ -74,6 +76,18 @@
     [res printResult];
     [con disconnect];
     [con release];
+}
+
+- (void)test03_Value
+{
+    PgSQLValue *anObject = [PgSQLValue valueWithValue:[NSNumber numberWithBool:YES] type:BOOLOID];
+    STAssertTrue([anObject boolValue],@"boolValue");
+    NSDate *aDate = [NSDate date];
+    [anObject setDate:aDate];
+    STAssertTrue([anObject type]==TIMESTAMPOID,@"TIMESTAMPOID");
+    STAssertTrue([anObject timetValue]==(time_t)[aDate timeIntervalSince1970],@"timeIntervalSince1970");
+    [anObject setLongLongValue:9876543210];
+    STAssertTrue([anObject longLongValue]==9876543210,@"TIMESTAMPOID");
 }
 
 @end

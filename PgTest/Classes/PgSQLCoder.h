@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import "libpq-fe.h"
+
 @interface PgSQLCoder : NSObject
+
++ (id)decodeBinary:(const char *)binary type:(Oid)type;
++ (const char *)encodeValue:(id)value type:(Oid)type;
 
 @end

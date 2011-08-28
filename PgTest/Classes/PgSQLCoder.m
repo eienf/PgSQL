@@ -10,4 +10,15 @@
 
 @implementation PgSQLCoder
 
++ (id)decodeBinary:(const char *)binary type:(Oid)type
+{
+    return nil;
+}
+
++ (const char *)encodeValue:(id)value type:(Oid)type
+{
+    return NULL;
+}
+
+
 @end
