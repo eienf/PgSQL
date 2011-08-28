@@ -11,8 +11,9 @@
 #include "libpq-fe.h"
 
 #import "PgSQLConnectionInfo.h"
-#import "PgSQLCommand.h"
 #import "PgSQLResult.h"
+
+@class PgSQLCommand;
 
 @interface PgSQLConnection : NSObject
 {
@@ -29,6 +30,5 @@
 - (NSString*)connectionMessage;
 - (int)transactionStatus;
 - (PgSQLResult*)executeCommand:(PgSQLCommand*)aCommand;
-- (PgSQLResult*)executeString:(NSString*)aString;
 
 @end

@@ -107,20 +107,5 @@
     return [PgSQLResult resultWithResult:res];
 }
 
-- (PgSQLResult*)executeString:(NSString*)aString
-{
-    if ( ![self isConnected] ) return nil;
-    const char *sql = [aString cStringUsingEncoding:NSUTF8StringEncoding];
-	PGresult *res = PQexec(conn_,sql);
-    ExecStatusType status = PQresultStatus(res);
-	if ( status != PGRES_TUPLES_OK && status != PGRES_COMMAND_OK) {
-		fprintf(stderr,"%s\n",PQresultErrorMessage(res));
-		PQclear(res);
-        return nil;
-	}
-	printf("EXECUTE SUCCESS!!\n");
-    return [PgSQLResult resultWithResult:res];
-}
-
 
 @end

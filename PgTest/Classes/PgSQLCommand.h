@@ -8,6 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+#include "libpq-fe.h"
+
+#import "PgSQLResult.h"
+#import "PgSQLConnection.h"
+
 @interface PgSQLCommand : NSObject
+{
+    
+}
+
++ (PgSQLResult*)executeString:(NSString*)aString connection:(PgSQLConnection*)conn;
 
 @end

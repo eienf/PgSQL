@@ -9,6 +9,7 @@
 #import "PgTestTests.h"
 #import "PgSQLConnectionInfo.h"
 #import "PgSQLConnection.h"
+#import "PgSQLCommand.h"
 #import "string.h"
 
 @implementation PgTestTests
@@ -54,7 +55,7 @@
     con.connectionInfo = info;
     [con connect];
     STAssertTrue([con connectionStatus]==CONNECTION_OK,@"connection failed.");
-    PgSQLResult *res = [con executeString:@"select count(*) from author"];
+    PgSQLResult *res = [PgSQLCommand executeString:@"select count(*) from author" connection:con];
     STAssertNotNil(res,@"res must be allocated.");
     if ( res == nil ) return;
     char *result;
