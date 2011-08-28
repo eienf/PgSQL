@@ -37,15 +37,7 @@
 {
     self = [super init];
     if (self) {
-        if ( [val isKindOfClass:[NSNumber class]] ||
-            [val isKindOfClass:[NSString class]] ||
-            [val isKindOfClass:[NSDate class]] ) {
-            self.value = val;
-            self.type = type;
-        } else {
-            self.type = INVALID_OID;
-            self.value = nil;
-        }
+        [self setValue:val type:type];
     }
     return self;
 }
@@ -61,6 +53,20 @@
     PgSQLValue *aValue = [[PgSQLValue alloc] initWithValue:val type:type];
     return [aValue autorelease];
 }
+
+- (void)setValue:(id)val type:(Oid)type
+{
+    if ( [val isKindOfClass:[NSNumber class]] ||
+        [val isKindOfClass:[NSString class]] ||
+        [val isKindOfClass:[NSDate class]] ) {
+        self.value = val;
+        self.type = type;
+    } else {
+        self.type = INVALID_OID;
+        self.value = nil;
+    }
+}
+
 
 - (size_t)getBinarySize
 {
