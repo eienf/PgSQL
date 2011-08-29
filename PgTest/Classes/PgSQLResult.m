@@ -123,6 +123,16 @@
     return PQfmod(result_, currentField_) == 1;
 }
 
+- (BOOL)getIsNull
+{
+    return PQgetisnull(result_, currentRow_, currentField_);
+}
+
+- (BOOL)getIsNull:(int)row column:(int)column
+{
+    return PQgetisnull(result_, row, column);
+}
+
 - (int)getType
 {
     return PQftype(result_, currentField_);
@@ -131,6 +141,11 @@
 - (char *)getFieldName:(int)column
 {
     return PQfname(result_, column);
+}
+
+- (size_t)getLength
+{
+    return PQgetlength(result_, currentRow_, currentField_);
 }
 
 #pragma mark DEBUG
@@ -153,6 +168,10 @@
         do {
             BOOL isBinary = [self getIsBinary];
             int type = [self getType];
+            if ( [self getIsNull] ) {
+                printf("NULL");
+                continue;
+            }
             char *value = [self getValue];
             if ( isBinary ) {
                 printf("%d ",type);

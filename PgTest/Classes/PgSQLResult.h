@@ -35,6 +35,8 @@
 - (BOOL)hasNexField;
 - (char *)getValue;
 - (char *)getValue:(int)row column:(int)column;
+- (BOOL)getIsNull;
+- (BOOL)getIsNull:(int)row column:(int)column;
 - (BOOL)isOK;
 - (void)printResult;
 
