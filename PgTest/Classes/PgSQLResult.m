@@ -161,11 +161,11 @@
         NSLog(@"%s () NO DATA AVAILABLE",__func__);
         return;   
     }
+    for ( int i = 0; i < numOfFields_; i++ ) {
+        printf("%s ",[self getFieldName:i]);
+    }
+    printf("\n");
     do {
-        for ( int i = 0; i < numOfFields_; i++ ) {
-            printf("%s ",[self getFieldName:i]);
-        }
-        printf("\n");
         do {
             BOOL isBinary = [self getIsBinary];
             int type = [self getType];

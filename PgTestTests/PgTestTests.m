@@ -116,29 +116,44 @@
     STAssertTrue([con connectionStatus]==CONNECTION_OK,@"connection failed.");
     PgSQLResult *res = [PgSQLCommand executeString:@"select count(*) from author" connection:con];
     STAssertNotNil(res,@"res must be allocated.");
-    if ( res == nil ) return;
     char *result;
-    result = [res getValue];
-    printf("[1]result = %s\n",result);
-    STAssertTrue(result!=NULL&&strcmp(result,"8")==0,@"count does not match");
-    result = [res getValue:0 column:0];
-    printf("[2]result = %s\n",result);
-    STAssertTrue(result!=NULL&&strcmp(result,"8")==0,@"count does not match");
+    if ( res != nil ) {
+        result = [res getValue];
+        printf("[1]result = %s\n",result);
+        STAssertTrue(result!=NULL&&strcmp(result,"8")==0,@"count does not match");
+        result = [res getValue:0 column:0];
+        printf("[2]result = %s\n",result);
+        STAssertTrue(result!=NULL&&strcmp(result,"8")==0,@"count does not match");
+        [res clear];
+    }
     res = [PgSQLCommand executeTextFormat:@"select * from author where author_id = $1;"
                                    params:[NSArray arrayWithObject:@"1"]
                                connection:con];
-    if ( res == nil ) return;
-    STAssertTrue([res numOfTuples]==1,@"numOfTuples");
-    STAssertTrue([res numOfFields]==2,@"numOfFields");
-    [res printResult];
+    if ( res != nil ) {
+        STAssertTrue([res numOfTuples]==1,@"numOfTuples");
+        STAssertTrue([res numOfFields]==2,@"numOfFields");
+        [res printResult];
+        [res clear];
+    }
     res = [PgSQLCommand executeBinaryFormat:@"select * from author where author_id = $1;"
                                    params:[NSArray arrayWithObject:
                                            [PgSQLValue valueWithValue:[NSNumber numberWithInt:1] type:INT8OID]]
                                connection:con];
-    if ( res == nil ) return;
-    STAssertTrue([res numOfTuples]==1,@"numOfTuples");
-    STAssertTrue([res numOfFields]==2,@"numOfFields");
-    [res printResult];
+    if ( res != nil ) {
+        STAssertTrue([res numOfTuples]==1,@"numOfTuples");
+        STAssertTrue([res numOfFields]==2,@"numOfFields");
+        [res printResult];
+        [res clear];
+    }
+    res = [PgSQLCommand executeBinaryFormat:@"select * from datatype;"
+                                     params:nil
+                                 connection:con];
+    if ( res != nil ) {
+        STAssertTrue([res numOfTuples]==4,@"numOfTuples");
+        STAssertTrue([res numOfFields]==13,@"numOfFields");
+        [res printResult];
+        [res clear];
+    }
     [con disconnect];
     [con release];
 }
