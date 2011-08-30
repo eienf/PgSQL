@@ -43,5 +43,8 @@
 + (size_t)encodeText:(NSString*)invalue intoBuffer:(char *)outval maxLength:(size_t)size;
 + (size_t)encodeBlob:(NSData*)invalue intoBuffer:(char *)outval maxSize:(size_t)size;
 
++ (void)setSecondsFromGMT:(NSInteger)seconds;
++ (NSInteger)secondsFromGMT;
++ (NSInteger)hoursFromGMT;
 
 @end

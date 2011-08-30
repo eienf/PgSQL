@@ -140,12 +140,21 @@
 {
     PgSQLValue *anObject = [PgSQLValue valueWithValue:[NSNumber numberWithBool:YES] type:BOOLOID];
     STAssertTrue([anObject boolValue],@"boolValue");
+    NSInteger size = [anObject getBinarySize];
+    STAssertTrue(size==1,@"boolValue size");
+    char byte;
+    [anObject getBinary:&byte maxSize:sizeof(byte)];
     NSDate *aDate = [NSDate date];
     [anObject setDate:aDate];
     STAssertTrue([anObject type]==TIMESTAMPOID,@"TIMESTAMPOID");
     STAssertTrue([anObject timetValue]==(time_t)[aDate timeIntervalSince1970],@"timeIntervalSince1970");
     [anObject setLongLongValue:9876543210];
-    STAssertTrue([anObject longLongValue]==9876543210,@"TIMESTAMPOID");
+    STAssertTrue([anObject longLongValue]==9876543210,@"Long Long");
+    char buffer[1024];
+    STAssertTrue([anObject getBinarySize]==sizeof(long long),@"long long size");
+    [anObject getBinary:buffer maxSize:sizeof(buffer)];
+    [PgSQLValue valueWithBinary:buffer type:INT8OID];
+    STAssertTrue([anObject longLongValue]==9876543210,@"Long Long");
 }
 
 - (void)test04_Coder

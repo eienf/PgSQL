@@ -29,8 +29,25 @@ static void htonll(char outval[8], const char* val)
 #endif
 }
 
+static NSInteger secondsFromGMT_ = 32400;
 
 @implementation PgSQLCoder
+
++ (void)setSecondsFromGMT:(NSInteger)seconds
+{
+    secondsFromGMT_ = seconds;
+}
+
++ (NSInteger)secondsFromGMT
+{
+    return secondsFromGMT_;
+}
+
++ (NSInteger)hoursFromGMT
+{
+    return secondsFromGMT_ / 3600;
+}
+
 
 + (id)decodeBinary:(const char *)binary type:(Oid)type
 {
