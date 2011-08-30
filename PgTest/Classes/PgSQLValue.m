@@ -105,7 +105,7 @@
 {
     size_t aSize = [self getBufferSize];
     if ( aSize > size ) return 0;
-    memcpy(buff, [PgSQLCoder encodeValue:value_ type:type_], aSize);
+    [PgSQLCoder encodeValue:value_ type:type_ intoBuffer:buff maxSize:size];
     return aSize;
 }
 

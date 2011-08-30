@@ -280,7 +280,19 @@ static void htonll(char outval[8], const char* val)
 
 + (NSDate*)decodeTimestampTZ:(const char *)binary
 {
-    return [self decodeTime:binary];
+	int64_t d = [self decodeInt64:binary];
+	d /= 1000000;
+	//
+    struct tm tmp;
+    tmp.tm_sec = (int)d;
+    tmp.tm_min = 0;
+    tmp.tm_hour = 9;
+    tmp.tm_mday = 1;
+    tmp.tm_mon = 0;
+    tmp.tm_year = 100;
+    tmp.tm_isdst = -1;
+    time_t t = mktime(&tmp);
+    return [NSDate dateWithTimeIntervalSince1970:t];
 }
 
 + (NSString*)decodeVarchar:(const char *)binary

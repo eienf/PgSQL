@@ -12,7 +12,63 @@
 #import "PgSQLCommand.h"
 #import "PgSQLResult.h"
 #import "PgSQLValue.h"
+#import "PgSQLCoder.h"
 #import "string.h"
+
+
+@interface NSDateComponents (EasyConst)
+- (NSDateComponents*)dateComponentYear:(int)year month:(int)month day:(int)day
+                                  hour:(int)hour minute:(int)minute second:(int)second;
+- (NSString*)description;
+- (BOOL)isZero:(NSUInteger)uflags;
+@end
+
+@implementation NSDateComponents (EasyConst)
+- (NSDateComponents*)dateComponentYear:(int)year month:(int)month day:(int)day
+                                  hour:(int)hour minute:(int)minute second:(int)second
+{
+    NSDateComponents *comp = [[NSDateComponents alloc] init];
+    [comp setYear:year];
+    [comp setMonth:month];
+    [comp setDay:day];
+    [comp setHour:hour];
+    [comp setMinute:minute];
+    [comp setSecond:second];
+    return [comp autorelease];
+}
+- (NSString*)description
+{
+    return [NSString stringWithFormat:@"%d/%d/%d %d:%d:%d",
+            [self year],[self month],[self day],[self hour],[self minute],[self second]];
+}
+- (BOOL)isZero:(NSUInteger)uflags
+{
+    if ( (uflags & NSYearCalendarUnit) && [self year] != 0 ) return NO;
+    if ( (uflags & NSMonthCalendarUnit) && [self month] != 0 ) return NO;
+    if ( (uflags & NSDayCalendarUnit) && [self day] != 0 ) return NO;
+    if ( (uflags & NSHourCalendarUnit) && [self hour] != 0 ) return NO;
+    if ( (uflags & NSMinuteCalendarUnit) && [self minute] != 0 ) return NO;
+    if ( (uflags & NSSecondCalendarUnit) && [self second] != 0 ) return NO;
+    return YES;
+}
+@end
+
+@interface NSCalendar (Compare)
+- (NSComparisonResult)compare:(NSDate*)aDate withDate:(NSDate*)bDate byDateComponents:(NSUInteger)uflags;
+@end
+
+@implementation NSCalendar (Compare)
+- (NSComparisonResult)compare:(NSDate*)aDate withDate:(NSDate*)bDate byDateComponents:(NSUInteger)uflags;
+{
+    NSDateComponents *comp = [self components:uflags fromDate:aDate toDate:bDate options:0];
+    NSLog(@"[a]%@",aDate);
+    NSLog(@"[b]%@",bDate);
+    NSLog(@"[c]%@",comp);
+    if ( [comp isZero:uflags] ) return NSOrderedSame;
+    return NSOrderedAscending;
+}
+@end
+
 
 @implementation PgTestTests
 
@@ -49,6 +105,7 @@
 }
 
 
+#if 0
 - (void)test02_Connection
 {
     NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
@@ -77,6 +134,7 @@
     [con disconnect];
     [con release];
 }
+#endif
 
 - (void)test03_Value
 {
@@ -88,6 +146,58 @@
     STAssertTrue([anObject timetValue]==(time_t)[aDate timeIntervalSince1970],@"timeIntervalSince1970");
     [anObject setLongLongValue:9876543210];
     STAssertTrue([anObject longLongValue]==9876543210,@"TIMESTAMPOID");
+}
+
+- (void)test04_Coder
+{
+    char byte;
+    [PgSQLCoder encodeBool:YES intoBuffer:&byte maxSize:sizeof(byte)];
+    STAssertTrue([PgSQLCoder decodeBool:&byte],@"BOOL");
+    char buffer[1024];
+    [PgSQLCoder encodeInt16:1234 intoBuffer:buffer maxSize:sizeof(buffer)];
+    STAssertTrue([PgSQLCoder decodeInt16:buffer]==1234,@"Int16");
+    [PgSQLCoder encodeInt32:12345678 intoBuffer:buffer maxSize:sizeof(buffer)];
+    STAssertTrue([PgSQLCoder decodeInt32:buffer]==12345678,@"Int32");
+    [PgSQLCoder encodeInt64:9876543210 intoBuffer:buffer maxSize:sizeof(buffer)];
+    STAssertTrue([PgSQLCoder decodeInt64:buffer]==9876543210,@"Int64");
+    [PgSQLCoder encodeFloat:12345678.0f intoBuffer:buffer maxSize:sizeof(buffer)];
+    STAssertTrue([PgSQLCoder decodeFloat:buffer]==12345678.0f,@"Float32");
+    [PgSQLCoder encodeDouble:9876543210.0 intoBuffer:buffer maxSize:sizeof(buffer)];
+    STAssertTrue([PgSQLCoder decodeDouble:buffer]==9876543210.0,@"Float64");
+    NSString *aString = @"Ascii";
+    [PgSQLCoder encodeVarchar:aString intoBuffer:buffer maxLength:sizeof(buffer)-1];
+    STAssertTrue([aString isEqualToString:[PgSQLCoder decodeVarchar:buffer]],@"Varchar");
+    [PgSQLCoder encodeText:aString intoBuffer:buffer maxLength:sizeof(buffer)-1];
+    STAssertTrue([aString isEqualToString:[PgSQLCoder decodeText:buffer]],@"Text");
+    NSDate *aDate = [NSDate date];
+    NSDate *bDate;
+    NSCalendar *theCalendar = [NSCalendar currentCalendar];
+    [PgSQLCoder encodeDate:aDate intoBuffer:buffer maxSize:sizeof(buffer)];
+    bDate = [PgSQLCoder decodeDate:buffer];
+    STAssertTrue([theCalendar compare:aDate
+                             withDate:bDate
+                     byDateComponents:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit]==NSOrderedSame
+                 ,@"Date");
+    [PgSQLCoder encodeTime:aDate intoBuffer:buffer maxSize:sizeof(buffer)];
+    bDate = [PgSQLCoder decodeTime:buffer];
+    STAssertTrue([theCalendar compare:aDate
+                             withDate:bDate
+                     byDateComponents:NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit]==NSOrderedSame
+                 ,@"Date");
+    [PgSQLCoder encodeTimestamp:aDate intoBuffer:buffer maxSize:sizeof(buffer)];
+    bDate = [PgSQLCoder decodeTimestamp:buffer];
+    STAssertTrue([theCalendar compare:aDate
+                             withDate:bDate
+                     byDateComponents:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit
+                  |NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit]==NSOrderedSame
+                 ,@"Date");
+    [PgSQLCoder encodeTimestampTZ:aDate intoBuffer:buffer maxSize:sizeof(buffer)];
+    bDate = [PgSQLCoder decodeTimestampTZ:buffer];
+    STAssertTrue([theCalendar compare:aDate
+                             withDate:bDate
+                     byDateComponents:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit
+                  |NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit]==NSOrderedSame
+                 ,@"Date");
 }
 
 @end
