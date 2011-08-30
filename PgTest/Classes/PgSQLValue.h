@@ -40,6 +40,7 @@
 + (PgSQLValue*)valueWithValue:(id)val type:(Oid)type;
 - (void)setValue:(id)val type:(Oid)type;
 - (size_t)getBinarySize;
+- (size_t)getBufferSize;
 - (size_t)getBinary:(char *)buff maxSize:(size_t)size;
 - (id)objectValue;
 - (const char *)cStringValue;// must free

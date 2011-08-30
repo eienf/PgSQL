@@ -52,7 +52,7 @@ static NSInteger secondsFromGMT_ = 32400;
 + (id)decodeBinary:(const char *)binary type:(Oid)type
 {
     //NULL対応
-    if ( binary == NULL || *binary == '\0' ) return nil;
+    if ( binary == NULL ) return nil;
     //
     switch(type){
         case BOOLOID:

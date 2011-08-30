@@ -105,7 +105,7 @@
 }
 
 
-#if 0
+#if 1
 - (void)test02_Connection
 {
     NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
@@ -126,6 +126,14 @@
     STAssertTrue(result!=NULL&&strcmp(result,"8")==0,@"count does not match");
     res = [PgSQLCommand executeTextFormat:@"select * from author where author_id = $1;"
                                    params:[NSArray arrayWithObject:@"1"]
+                               connection:con];
+    if ( res == nil ) return;
+    STAssertTrue([res numOfTuples]==1,@"numOfTuples");
+    STAssertTrue([res numOfFields]==2,@"numOfFields");
+    [res printResult];
+    res = [PgSQLCommand executeBinaryFormat:@"select * from author where author_id = $1;"
+                                   params:[NSArray arrayWithObject:
+                                           [PgSQLValue valueWithValue:[NSNumber numberWithInt:1] type:INT8OID]]
                                connection:con];
     if ( res == nil ) return;
     STAssertTrue([res numOfTuples]==1,@"numOfTuples");

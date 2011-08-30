@@ -7,6 +7,7 @@
 //
 
 #import "PgSQLResult.h"
+#import "PgSQLCoder.h"
 
 @implementation PgSQLResult
 
@@ -120,7 +121,7 @@
 
 - (BOOL)getIsBinary
 {
-    return PQfmod(result_, currentField_) == 1;
+    return PQfformat(result_, currentField_) == 1;
 }
 
 - (BOOL)getIsNull
@@ -169,12 +170,14 @@
             BOOL isBinary = [self getIsBinary];
             int type = [self getType];
             if ( [self getIsNull] ) {
-                printf("NULL");
+                printf("(NULL) ");
                 continue;
             }
             char *value = [self getValue];
             if ( isBinary ) {
-                printf("%d ",type);
+                id object = [PgSQLCoder decodeBinary:value type:type];
+                NSString *aString = [NSString stringWithFormat:@"%@",object];
+                printf("%s ",[aString UTF8String]);
             } else {
                 printf("%s ",value);
             }
