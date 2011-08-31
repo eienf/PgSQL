@@ -13,6 +13,7 @@
 #import "PgSQLResult.h"
 #import "PgSQLValue.h"
 #import "PgSQLCoder.h"
+#import "PgSQLQuery.h"
 #import "string.h"
 
 
@@ -105,7 +106,7 @@
 }
 
 
-#if 1
+#if 0
 - (void)test02_Connection
 {
     NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
@@ -231,5 +232,62 @@
                   |NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit]==NSOrderedSame
                  ,@"Date");
 }
+
+#if 1
+- (void)test05_Query
+{
+    NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
+    PgSQLConnectionInfo *info = [PgSQLConnectionInfo connectionInfoWithURL:aUrl];
+    PgSQLConnection *con = [[PgSQLConnection alloc] init];
+    con.connectionInfo = info;
+    [con connect];
+    if ( con.isConnected ) {
+        PgSQLQuery *aQuery = [PgSQLQuery queryWithTable:@"author" where:nil forClass:nil orderBy:nil connection:con];
+        PgSQLResult *res = [aQuery execute];
+        STAssertNotNil(res,@"res must be allocated.");
+        STAssertTrue([res numOfTuples]==8,@"numOfTuples");
+        STAssertTrue([res numOfFields]==2,@"numOfFields");
+        [res printResult];
+        [res clear];
+
+        aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id = 1" forClass:nil orderBy:nil connection:con];
+        res = [aQuery execute];
+        STAssertNotNil(res,@"res must be allocated.");
+        STAssertTrue([res numOfTuples]==1,@"numOfTuples");
+        STAssertTrue([res numOfFields]==2,@"numOfFields");        
+        [res printResult];
+        [res clear];
+
+        aQuery = [PgSQLQuery queryWithTable:@"author"
+                                      where:@"author_id > $1" 
+                                     params:[NSArray arrayWithObject:[PgSQLValue valueWithValue:[NSNumber numberWithInt:100] type:INT4OID]]
+                                   forClass:nil
+                                    orderBy:@"author_id"
+                                 connection:con];
+        res = [aQuery execute];
+        STAssertNotNil(res,@"res must be allocated.");
+        STAssertTrue([res numOfTuples]==2,@"numOfTuples");
+        STAssertTrue([res numOfFields]==2,@"numOfFields");        
+        [res printResult];
+        [res clear];
+
+        aQuery = [PgSQLQuery queryWithTable:@"author"
+                                columnNames:[NSArray arrayWithObject:@"author_id"]
+                                     params:[NSArray arrayWithObject:[PgSQLValue valueWithValue:[NSNumber numberWithInt:101] type:INT4OID]]
+                                   forClass:nil
+                                    orderBy:@"author_id"
+                                 connection:con];
+        res = [aQuery execute];
+        STAssertNotNil(res,@"res must be allocated.");
+        STAssertTrue([res numOfTuples]==1,@"numOfTuples");
+        STAssertTrue([res numOfFields]==2,@"numOfFields");        
+        [res printResult];
+        [res clear];
+
+        [con disconnect];
+    }
+    [con release];
+}
+#endif
 
 @end

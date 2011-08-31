@@ -33,11 +33,16 @@
 - (BOOL)hasNextRow;
 - (BOOL)nextField;
 - (BOOL)hasNexField;
+- (char *)getFieldName:(int)column;
+- (size_t)getLength;
+- (int)getType;
 - (char *)getValue;
 - (char *)getValue:(int)row column:(int)column;
 - (BOOL)getIsNull;
 - (BOOL)getIsNull:(int)row column:(int)column;
+- (BOOL)getIsBinary;
 - (BOOL)isOK;
+
 - (void)printResult;
 
 @end
