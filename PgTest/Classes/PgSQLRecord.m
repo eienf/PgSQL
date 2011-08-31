@@ -44,6 +44,11 @@
     return [oldValues_ count] > 0;
 }
 
+- (PgSQLValue*)pkeyValue
+{
+    return [self valueforColumnName:pkeyName_];
+}
+
 #pragma mark Accessor
 
 - (void)setObject:(id)object forColumnName:(NSString*)columnName
@@ -86,6 +91,19 @@
     return [attributes_ objectForKey:columnName];
 }
 
+- (void)setValue:(PgSQLValue*)value forColumnName:(NSString*)columnName
+{
+    if ( [oldValues_ count] == 0 ) {
+        oldValues_ = [attributes_ copy];
+    }
+    [attributes_ setObject:value forKey:columnName];
+}
+
+- (void)setBinary:(const char *)val ofType:(Oid)type forColumnName:(NSString*)columnName
+{
+    PgSQLValue *aValue = [PgSQLValue valueWithBinary:val type:type];
+    [self setValue:aValue forColumnName:columnName];
+}
 
 - (void)setBOOL:(BOOL)val forColumnName:(NSString*)columnName
 {

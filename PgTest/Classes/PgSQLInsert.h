@@ -7,7 +7,14 @@
 //
 
 #import "PgSQLCommand.h"
+#import "PgSQLRecord.h"
 
 @interface PgSQLInsert : PgSQLCommand
+{
+    PgSQLRecord *record_;
+}
+@property(nonatomic,retain,readwrite) PgSQLRecord *record;
+
+- (PgSQLRecord*)insertedRecord;
 
 @end

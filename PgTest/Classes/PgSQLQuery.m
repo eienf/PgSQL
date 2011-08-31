@@ -16,13 +16,11 @@
 @synthesize recordClass = recordClass_;
 @synthesize orderBy = orderBy_;
 @synthesize tableName = tableName_;
-@synthesize whereStatement = whereStatement_;
 
 - (void)dealloc
 {
-    [whereStatement_ release];
-    [tableName_ release];
-    [orderBy_ release];
+    self.tableName = nil;
+    self.orderBy = nil;
     [super dealloc];
 }
 

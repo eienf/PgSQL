@@ -9,5 +9,9 @@
 #import "PgSQLStatement.h"
 
 @interface PgSQLDelete : PgSQLStatement
+{
+    NSArray *records_;
+}
+@property(nonatomic,retain,readwrite) NSArray *records;
 
 @end

@@ -7,7 +7,13 @@
 //
 
 #import "PgSQLStatement.h"
+#import "PgSQLRecord.h"
 
 @interface PgSQLUpdate : PgSQLStatement
+{
+    PgSQLRecord *record_;
+}
+@property(nonatomic,retain,readwrite) PgSQLRecord *record;
+
 
 @end

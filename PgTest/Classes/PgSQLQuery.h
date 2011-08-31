@@ -13,12 +13,10 @@
     Class recordClass_;
     NSString *orderBy_;
     NSString *tableName_;
-    NSString *whereStatement_;
 }
 @property(nonatomic,assign,readwrite) Class recordClass;
 @property(nonatomic,copy,readwrite) NSString *orderBy;
 @property(nonatomic,copy,readwrite) NSString *tableName;
-@property(nonatomic,copy,readwrite) NSString *whereStatement;
 
 + (PgSQLQuery*)queryWithTable:(NSString*)tableName
                         where:(NSString*)whereString

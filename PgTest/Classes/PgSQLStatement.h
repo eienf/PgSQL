@@ -9,5 +9,9 @@
 #import "PgSQLCommand.h"
 
 @interface PgSQLStatement : PgSQLCommand
+{
+    NSString *whereStatement_;
+}
+@property(nonatomic,copy,readwrite) NSString *whereStatement;
 
 @end

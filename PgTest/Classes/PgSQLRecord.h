@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PgSQLValue.h"
 
 @interface PgSQLRecord : NSObject
 {
@@ -23,6 +24,7 @@
 @property(nonatomic,copy,readwrite) NSString *pkeySequenceName;
 @property(nonatomic,assign,readonly) BOOL isDirty;
 @property(nonatomic,assign,readonly) BOOL isTemp;
+@property(nonatomic,retain,readonly) PgSQLValue *pkeyValue;
 
 - (void)setObject:(id)object forColumnName:(NSString*)columnName;
 - (id)objectForColumnName:(NSString*)columnName;
@@ -57,5 +59,10 @@
 
 - (void)setNullforColumnName:(NSString*)columnName;
 - (BOOL)isNullForColumnName:(NSString*)columnName;
+
+- (PgSQLValue*)valueforColumnName:(NSString*)columnName;
+- (void)setValue:(PgSQLValue*)value forColumnName:(NSString*)columnName;
+- (void)setBinary:(const char *)val ofType:(Oid)type forColumnName:(NSString*)columnName;
+
 
 @end

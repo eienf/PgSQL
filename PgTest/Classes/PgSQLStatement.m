@@ -10,4 +10,12 @@
 
 @implementation PgSQLStatement
 
+@synthesize whereStatement = whereStatement_;
+
+- (void)dealloc
+{
+    self.whereStatement = nil;
+    [super dealloc];
+}
+
 @end
