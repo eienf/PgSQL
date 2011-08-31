@@ -36,9 +36,9 @@
 
 - (id)initWithBinary:(const char *)val type:(Oid)type;
 + (PgSQLValue*)valueWithBinary:(const char *)val type:(Oid)type;
-- (id)initWithValue:(id)val type:(Oid)type;
-+ (PgSQLValue*)valueWithValue:(id)val type:(Oid)type;
-- (void)setValue:(id)val type:(Oid)type;
+- (id)initWithObject:(id)val type:(Oid)type;
++ (PgSQLValue*)valueWithObject:(id)val type:(Oid)type;
+- (void)setObject:(id)val type:(Oid)type;
 - (size_t)getBinarySize;
 - (size_t)getBufferSize;
 - (size_t)getBinary:(char *)buff maxSize:(size_t)size;
@@ -52,6 +52,7 @@
 - (NSDate*)dateValue;
 - (NSString*)stringValue;
 - (BOOL)boolValue;
+- (NSData*)dataValue;
 
 - (void)setBoolValue:(BOOL)val;
 - (void)setByteValue:(int8_t)val;
@@ -62,6 +63,12 @@
 - (void)setDoubleValue:(double)val;
 - (void)setDate:(NSDate*)aDate;
 - (void)setTime:(NSDate*)aDate;
+- (void)setTimestamp:(NSDate*)aDate;
+- (void)setTimestampTZ:(NSDate*)aDate;
 - (void)setString:(NSString*)aString;
+- (void)setText:(NSString*)aString;
+- (void)setData:(NSData*)object;
+
+- (NSString*)description;
 
 @end

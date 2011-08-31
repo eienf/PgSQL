@@ -33,11 +33,11 @@
     return self;
 }
 
-- (id)initWithValue:(id)val type:(Oid)type
+- (id)initWithObject:(id)val type:(Oid)type
 {
     self = [super init];
     if (self) {
-        [self setValue:val type:type];
+        [self setObject:val type:type];
     }
     return self;
 }
@@ -48,13 +48,13 @@
     return [aValue autorelease];
 }
 
-+ (PgSQLValue*)valueWithValue:(id)val type:(Oid)type
++ (PgSQLValue*)valueWithObject:(id)val type:(Oid)type
 {
-    PgSQLValue *aValue = [[PgSQLValue alloc] initWithValue:val type:type];
+    PgSQLValue *aValue = [[PgSQLValue alloc] initWithObject:val type:type];
     return [aValue autorelease];
 }
 
-- (void)setValue:(id)val type:(Oid)type
+- (void)setObject:(id)val type:(Oid)type
 {
     if ( [val isKindOfClass:[NSNumber class]] ||
         [val isKindOfClass:[NSString class]] ||
@@ -234,11 +234,74 @@
     self.type = TIMEOID;
 }
 
+- (void)setTimestamp:(NSDate*)aDate
+{
+    self.value = aDate;
+    self.type = TIMESTAMPOID;
+}
+
+- (void)setTimestampTZ:(NSDate*)aDate
+{
+    self.value = aDate;
+    self.type = TIMESTAMPTZOID;
+}
+
 - (void)setString:(NSString*)aString
 {
     self.value = [aString copy];
     self.type = VARCHAROID;
 }
 
+- (void)setText:(NSString*)aString
+{
+    self.value = [aString copy];
+    self.type = TEXTOID;
+}
+
+- (void)setData:(NSData*)object
+{
+}
+
+- (NSData*)dataValue
+{
+    return nil;
+}
+
+- (NSString*)oidName
+{
+    switch (type_) {
+        case BOOLOID:
+            return @"BOOL";
+        case INT2OID:
+            return @"INT2";
+        case INT4OID:
+            return @"INT4";
+        case FLOAT4OID:
+            return @"FLOAT4";
+        case DATEOID:
+            return @"DATE";
+        case INT8OID:
+            return @"INT8";
+        case FLOAT8OID:
+            return @"FLOAT8";
+        case TIMEOID:
+            return @"TIME";
+        case TIMESTAMPOID:
+            return @"TIMESTAMP";
+        case TIMESTAMPTZOID:
+            return @"TIMESTAMPTZ";
+        case VARCHAROID:
+            return @"VARCHAR";
+        case TEXTOID:
+            return @"TEXT";
+        default:
+            return @"unknown";
+    }
+}
+
+- (NSString*)description
+{
+    return [NSString stringWithFormat:@"<%@> %@:%@",[self className],[self oidName],[self stringValue]];
+}
 
 @end

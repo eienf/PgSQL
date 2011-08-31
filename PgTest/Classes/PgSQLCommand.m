@@ -65,39 +65,49 @@
 
 + (PgSQLResult*)executeBinaryFormat:(NSString*)aFormat params:(NSArray*)anArray connection:(PgSQLConnection*)conn
 {
+    PGresult *res;
     int nNumParams = [anArray count];
     if ( nNumParams == 0 ) {
-        return [PgSQLCommand executeString:aFormat connection:conn];
+        res = PQexecParams([conn conn],
+                           [aFormat UTF8String],
+                           0, // int nNumParams,
+                           NULL,// const Oid *paramTypes,
+                           NULL, // const char * const *paramValues,
+                           NULL, // const int *paramLengths,
+                           NULL, // const int *paramFormats,
+                           1 // int resultFormat
+                           );
+    } else {
+        char **paramValues = (char**)malloc(nNumParams*sizeof(char*));
+        Oid *paramTypes = (Oid*)malloc(nNumParams*sizeof(Oid));
+        int *paramLengths = (int*)malloc(nNumParams*sizeof(int));
+        int *paramFormats = (int*)malloc(nNumParams*sizeof(int));
+        for ( int i = 0; i < nNumParams; i++ ) {
+            size_t size = [(PgSQLValue*)[anArray objectAtIndex:i] getBufferSize];
+            paramValues[i] = malloc(size);
+            [(PgSQLValue*)[anArray objectAtIndex:i] getBinary:paramValues[i] maxSize:size];
+            paramTypes[i] = [(PgSQLValue*)[anArray objectAtIndex:i] type];
+            paramLengths[i] = [(PgSQLValue*)[anArray objectAtIndex:i] getBinarySize];
+            paramFormats[i] = 1;
+        }
+        res = PQexecParams([conn conn],
+                           [aFormat UTF8String],
+                           nNumParams, // int nNumParams,
+                           paramTypes,// const Oid *paramTypes,
+                           (const char * const *)paramValues, // const char * const *paramValues,
+                           paramLengths, // const int *paramLengths,
+                           paramFormats, // const int *paramFormats,
+                           1 // int resultFormat
+                           );
+        for ( int i = 0; i < nNumParams; i++ ) {
+            free(paramValues[i]);
+        }
+        free(paramValues);
+        free(paramTypes);
+        free(paramLengths);
+        free(paramFormats);
     }
-    char **paramValues = (char**)malloc(nNumParams*sizeof(char*));
-    Oid *paramTypes = (Oid*)malloc(nNumParams*sizeof(Oid));
-    int *paramLengths = (int*)malloc(nNumParams*sizeof(int));
-    int *paramFormats = (int*)malloc(nNumParams*sizeof(int));
-    for ( int i = 0; i < nNumParams; i++ ) {
-        size_t size = [(PgSQLValue*)[anArray objectAtIndex:i] getBufferSize];
-        paramValues[i] = malloc(size);
-        [(PgSQLValue*)[anArray objectAtIndex:i] getBinary:paramValues[i] maxSize:size];
-        paramTypes[i] = [(PgSQLValue*)[anArray objectAtIndex:i] type];
-        paramLengths[i] = [(PgSQLValue*)[anArray objectAtIndex:i] getBinarySize];
-        paramFormats[i] = 1;
-    }
-	PGresult *res = PQexecParams([conn conn],
-                                 [aFormat UTF8String],
-                                 nNumParams, // int nNumParams,
-                                 paramTypes,// const Oid *paramTypes,
-                                 (const char * const *)paramValues, // const char * const *paramValues,
-                                 paramLengths, // const int *paramLengths,
-                                 paramFormats, // const int *paramFormats,
-                                 1 // int resultFormat
-                                 );
     ExecStatusType status = PQresultStatus(res);
-    for ( int i = 0; i < nNumParams; i++ ) {
-        free(paramValues[i]);
-    }
-    free(paramValues);
-    free(paramTypes);
-    free(paramLengths);
-    free(paramFormats);
 	if ( status != PGRES_TUPLES_OK && status != PGRES_COMMAND_OK) {
 		fprintf(stderr,"%s\n",PQresultErrorMessage(res));
 		PQclear(res);

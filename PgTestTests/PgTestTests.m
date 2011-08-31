@@ -14,6 +14,7 @@
 #import "PgSQLValue.h"
 #import "PgSQLCoder.h"
 #import "PgSQLQuery.h"
+#import "PgSQLRecord.h"
 #import "string.h"
 
 
@@ -162,7 +163,7 @@
 
 - (void)test03_Value
 {
-    PgSQLValue *anObject = [PgSQLValue valueWithValue:[NSNumber numberWithBool:YES] type:BOOLOID];
+    PgSQLValue *anObject = [PgSQLValue valueWithObject:[NSNumber numberWithBool:YES] type:BOOLOID];
     STAssertTrue([anObject boolValue],@"boolValue");
     NSInteger size = [anObject getBinarySize];
     STAssertTrue(size==1,@"boolValue size");
@@ -233,7 +234,7 @@
                  ,@"Date");
 }
 
-#if 1
+#if 0
 - (void)test05_Query
 {
     NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
@@ -260,7 +261,7 @@
 
         aQuery = [PgSQLQuery queryWithTable:@"author"
                                       where:@"author_id > $1" 
-                                     params:[NSArray arrayWithObject:[PgSQLValue valueWithValue:[NSNumber numberWithInt:100] type:INT4OID]]
+                                     params:[NSArray arrayWithObject:[PgSQLValue valueWithObject:[NSNumber numberWithInt:100] type:INT4OID]]
                                    forClass:nil
                                     orderBy:@"author_id"
                                  connection:con];
@@ -273,7 +274,7 @@
 
         aQuery = [PgSQLQuery queryWithTable:@"author"
                                 columnNames:[NSArray arrayWithObject:@"author_id"]
-                                     params:[NSArray arrayWithObject:[PgSQLValue valueWithValue:[NSNumber numberWithInt:101] type:INT4OID]]
+                                     params:[NSArray arrayWithObject:[PgSQLValue valueWithObject:[NSNumber numberWithInt:101] type:INT4OID]]
                                    forClass:nil
                                     orderBy:@"author_id"
                                  connection:con];
@@ -284,6 +285,62 @@
         [res printResult];
         [res clear];
 
+        [con disconnect];
+    }
+    [con release];
+}
+#endif
+
+#if 1
+- (void)test05_Query
+{
+    NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
+    PgSQLConnectionInfo *info = [PgSQLConnectionInfo connectionInfoWithURL:aUrl];
+    PgSQLConnection *con = [[PgSQLConnection alloc] init];
+    con.connectionInfo = info;
+    [con connect];
+    if ( con.isConnected ) {
+        PgSQLQuery *aQuery = [PgSQLQuery queryWithTable:@"author" where:nil forClass:nil orderBy:nil connection:con];
+        NSArray *anArray = [aQuery queryRecords];
+        STAssertTrue([anArray count]==8,@"numOfTuples");
+        for ( PgSQLRecord *aRecord in anArray ) {
+            NSLog(@"%@",aRecord.attributes);
+        }
+/*        
+        aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id = 1" forClass:nil orderBy:nil connection:con];
+        res = [aQuery execute];
+        STAssertNotNil(res,@"res must be allocated.");
+        STAssertTrue([res numOfTuples]==1,@"numOfTuples");
+        STAssertTrue([res numOfFields]==2,@"numOfFields");        
+        [res printResult];
+        [res clear];
+        
+        aQuery = [PgSQLQuery queryWithTable:@"author"
+                                      where:@"author_id > $1" 
+                                     params:[NSArray arrayWithObject:[PgSQLValue valueWithObject:[NSNumber numberWithInt:100] type:INT4OID]]
+                                   forClass:nil
+                                    orderBy:@"author_id"
+                                 connection:con];
+        res = [aQuery execute];
+        STAssertNotNil(res,@"res must be allocated.");
+        STAssertTrue([res numOfTuples]==2,@"numOfTuples");
+        STAssertTrue([res numOfFields]==2,@"numOfFields");        
+        [res printResult];
+        [res clear];
+        
+        aQuery = [PgSQLQuery queryWithTable:@"author"
+                                columnNames:[NSArray arrayWithObject:@"author_id"]
+                                     params:[NSArray arrayWithObject:[PgSQLValue valueWithObject:[NSNumber numberWithInt:101] type:INT4OID]]
+                                   forClass:nil
+                                    orderBy:@"author_id"
+                                 connection:con];
+        res = [aQuery execute];
+        STAssertNotNil(res,@"res must be allocated.");
+        STAssertTrue([res numOfTuples]==1,@"numOfTuples");
+        STAssertTrue([res numOfFields]==2,@"numOfFields");        
+        [res printResult];
+        [res clear];
+     */   
         [con disconnect];
     }
     [con release];

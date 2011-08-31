@@ -124,6 +124,11 @@
     return PQfformat(result_, currentField_) == 1;
 }
 
+- (BOOL)getIsBinary:(int)column
+{
+    return PQfformat(result_, column) == 1;
+}
+
 - (BOOL)getIsNull
 {
     return PQgetisnull(result_, currentRow_, currentField_);
@@ -139,6 +144,11 @@
     return PQftype(result_, currentField_);
 }
 
+- (int)getType:(int)column
+{
+    return PQftype(result_, column);
+}
+
 - (char *)getFieldName:(int)column
 {
     return PQfname(result_, column);
@@ -147,6 +157,11 @@
 - (size_t)getLength
 {
     return PQgetlength(result_, currentRow_, currentField_);
+}
+
+- (size_t)getLength:(int)row column:(int)column
+{
+    return PQgetlength(result_, row, column);
 }
 
 #pragma mark DEBUG

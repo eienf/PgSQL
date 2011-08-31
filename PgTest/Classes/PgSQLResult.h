@@ -35,12 +35,15 @@
 - (BOOL)hasNexField;
 - (char *)getFieldName:(int)column;
 - (size_t)getLength;
+- (size_t)getLength:(int)row column:(int)column;
 - (int)getType;
+- (int)getType:(int)column;
 - (char *)getValue;
 - (char *)getValue:(int)row column:(int)column;
 - (BOOL)getIsNull;
 - (BOOL)getIsNull:(int)row column:(int)column;
 - (BOOL)getIsBinary;
+- (BOOL)getIsBinary:(int)column;
 - (BOOL)isOK;
 
 - (void)printResult;

@@ -8,6 +8,8 @@
 
 #import "PgSQLQuery.h"
 #import "PgSQLResult.h"
+#import "PgSQLValue.h"
+#import "PgSQLRecord.h"
 
 @implementation PgSQLQuery
 
@@ -33,7 +35,10 @@
     PgSQLQuery *aCommand = [[PgSQLQuery alloc] init];
     aCommand.conn = connection;
     aCommand.orderBy = orderBy;
-    aCommand.recordClass = recordClass;
+    aCommand.recordClass = [PgSQLRecord class];
+    if ( [recordClass isSubclassOfClass:[PgSQLRecord class]] ) {
+        aCommand.recordClass = recordClass;
+    }
     aCommand.whereStatement = whereString;
     aCommand.tableName = tableName;
     aCommand.isBinary = YES;
@@ -111,28 +116,35 @@
         NSLog(@"%s () NO DATA AVAILABLE",__func__);
         return nil;   
     }
-    NSMutableArray *anArray = [NSMutableArray arrayWithCapacity:result.numOfFields];
+    NSMutableArray *anArray = [NSMutableArray arrayWithCapacity:result.numOfTuples];
+    NSMutableArray *nameList = [NSMutableArray arrayWithCapacity:result.numOfFields];
     for ( int i = 0; i < result.numOfFields; i++ ) {
         NSString *aString = [NSString stringWithUTF8String:[result getFieldName:i]];
-        [anArray addObject:aString];
+        [nameList addObject:aString];
     }
-    do {
-        do {
-            BOOL isBinary = [result getIsBinary];
-            int type = [result getType];
+    for ( int row = 0; row < result.numOfTuples; row++ ) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:result.numOfFields];
+        for ( int col = 0; col < result.numOfFields; col++ ) {
+            BOOL isBinary = [result getIsBinary:col];
             if ( [result getIsNull] ) {
-                printf("(NULL) ");
                 continue;
             }
-            char *value = [result getValue];
+            char *value = [result getValue:row column:col];
+            int type = [result getType:col];
             if ( isBinary ) {
+                PgSQLValue *aValue = [PgSQLValue valueWithBinary:value type:type];
+                [dict setObject:aValue forKey:[nameList objectAtIndex:col]];
             } else {
-                printf("%s ",value);
+                PgSQLValue *aValue = [PgSQLValue valueWithBinary:value type:TEXTOID];
+                [dict setObject:aValue forKey:[nameList objectAtIndex:col]];
             }
-        } while ([result nextField]);
-        printf("\n");
-    } while ([result nextRow]);
-    return nil;
+        }
+        PgSQLRecord *aRecord = [[[recordClass_ alloc] init] autorelease];
+        [aRecord setAttributes:dict];
+        [anArray addObject:aRecord];
+    }
+    [result clear];
+    return anArray;
 }
 
 
