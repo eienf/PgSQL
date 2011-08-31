@@ -57,7 +57,7 @@
     if ( [columnNames count] > 0 ) {
         NSMutableArray *anArray = [NSMutableArray arrayWithCapacity:[columnNames count]];
         [columnNames enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop){
-            NSString *aString = [NSString stringWithFormat:@"(%@ == $%d)",obj,idx];
+            NSString *aString = [NSString stringWithFormat:@"(%@ = $%d)",obj,idx+1];
             [anArray addObject:aString];
         }];
         aCommand.whereStatement = [anArray componentsJoinedByString:@" AND "];
