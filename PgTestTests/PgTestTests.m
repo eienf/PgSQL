@@ -300,20 +300,21 @@
     con.connectionInfo = info;
     [con connect];
     if ( con.isConnected ) {
-        PgSQLQuery *aQuery = [PgSQLQuery queryWithTable:@"author" where:nil forClass:nil orderBy:nil connection:con];
-        NSArray *anArray = [aQuery queryRecords];
+        PgSQLQuery *aQuery;
+        NSArray *anArray;
+        aQuery = [PgSQLQuery queryWithTable:@"author" where:nil forClass:nil orderBy:nil connection:con];
+        anArray = [aQuery queryRecords];
         STAssertTrue([anArray count]==8,@"numOfTuples");
         for ( PgSQLRecord *aRecord in anArray ) {
             NSLog(@"%@",aRecord.attributes);
         }
-/*        
+
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id = 1" forClass:nil orderBy:nil connection:con];
-        res = [aQuery execute];
-        STAssertNotNil(res,@"res must be allocated.");
-        STAssertTrue([res numOfTuples]==1,@"numOfTuples");
-        STAssertTrue([res numOfFields]==2,@"numOfFields");        
-        [res printResult];
-        [res clear];
+        anArray = [aQuery queryRecords];
+        STAssertTrue([anArray count]==1,@"numOfTuples");
+        for ( PgSQLRecord *aRecord in anArray ) {
+            NSLog(@"%@",aRecord.attributes);
+        }
         
         aQuery = [PgSQLQuery queryWithTable:@"author"
                                       where:@"author_id > $1" 
@@ -321,12 +322,11 @@
                                    forClass:nil
                                     orderBy:@"author_id"
                                  connection:con];
-        res = [aQuery execute];
-        STAssertNotNil(res,@"res must be allocated.");
-        STAssertTrue([res numOfTuples]==2,@"numOfTuples");
-        STAssertTrue([res numOfFields]==2,@"numOfFields");        
-        [res printResult];
-        [res clear];
+        anArray = [aQuery queryRecords];
+        STAssertTrue([anArray count]==2,@"numOfTuples");
+        for ( PgSQLRecord *aRecord in anArray ) {
+            NSLog(@"%@",aRecord.attributes);
+        }
         
         aQuery = [PgSQLQuery queryWithTable:@"author"
                                 columnNames:[NSArray arrayWithObject:@"author_id"]
@@ -334,13 +334,11 @@
                                    forClass:nil
                                     orderBy:@"author_id"
                                  connection:con];
-        res = [aQuery execute];
-        STAssertNotNil(res,@"res must be allocated.");
-        STAssertTrue([res numOfTuples]==1,@"numOfTuples");
-        STAssertTrue([res numOfFields]==2,@"numOfFields");        
-        [res printResult];
-        [res clear];
-     */   
+        anArray = [aQuery queryRecords];
+        STAssertTrue([anArray count]==1,@"numOfTuples");
+        for ( PgSQLRecord *aRecord in anArray ) {
+            NSLog(@"%@",aRecord.attributes);
+        }
         [con disconnect];
     }
     [con release];

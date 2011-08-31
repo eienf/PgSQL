@@ -301,7 +301,7 @@
 
 - (NSString*)description
 {
-    return [NSString stringWithFormat:@"<%@> %@:%@",[self className],[self oidName],[self stringValue]];
+    return [NSString stringWithFormat:@"<%@> %@:%@",[self className],[self oidName],self.value];
 }
 
 @end
