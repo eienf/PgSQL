@@ -43,7 +43,7 @@
 - (size_t)getBufferSize;
 - (size_t)getBinary:(char *)buff maxSize:(size_t)size;
 - (id)objectValue;
-- (const char *)cStringValue;// must free
+- (char *)cStringValue;// must free
 - (int32_t)intValue;
 - (int64_t)longLongValue;
 - (float)floatValue;

@@ -114,13 +114,14 @@
     return self.value;
 }
 
-- (const char *)cStringValue // must free
+- (char *)cStringValue // must free
 {
     NSString *aString = [self stringValue];
     size_t size = [aString lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
     char *buff = malloc(size+1);
-    BOOL result = [aString getCString:buff maxLength:size encoding:NSUTF8StringEncoding];
+    BOOL result = [aString getCString:buff maxLength:size+1 encoding:NSUTF8StringEncoding];
     if ( result ) return buff;
+    free(buff);
     return NULL;
 }
 
@@ -176,6 +177,9 @@
 {
     if ( [value_ isKindOfClass:[NSDate class]] ) {
         return [value_ description];
+    }
+    if ( [value_ isKindOfClass:[NSString class]] ) {
+        return value_;
     }
     return [value_ stringValue];
 }

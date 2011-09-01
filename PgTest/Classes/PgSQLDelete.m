@@ -18,6 +18,31 @@
     [super dealloc];
 }
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.records = [NSMutableArray array];
+    }
+    return self;
+}
+
++ (PgSQLDelete*)deleteCommandWith:(PgSQLRecord*)aRecord connection:(PgSQLConnection*)con
+{
+    if ( ![aRecord isKindOfClass:[PgSQLRecord class]] ) return nil;
+    PgSQLDelete *anObect = [[PgSQLDelete alloc] init];
+    anObect.conn = con;
+    [anObect.records addObject:aRecord];
+    return [anObect autorelease];
+}
+
++ (PgSQLDelete*)deleteCommandFrom:(NSArray*)anArray connection:(PgSQLConnection*)con
+{
+    PgSQLDelete *anObect = [[PgSQLDelete alloc] init];
+    anObect.conn = con;
+    [anObect.records addObjectsFromArray:anArray];
+    return [anObect autorelease];
+}
+
 - (PgSQLResult*)execute
 {
     if ( ![self isBinary] ) return nil;
@@ -33,8 +58,8 @@
     }];
     NSString *pkeyList = [anArray componentsJoinedByString:@" , "];
     NSString *sql;
-    sql = [NSString stringWithFormat:@"DELETE * FROM %@ WHERE %@ IN ( %@ )",tableName,pkeyName,pkeyList];
-    return [PgSQLCommand executeBinaryFormat:sql params:params_ connection:conn_];
+    sql = [NSString stringWithFormat:@"DELETE FROM %@ WHERE %@ IN ( %@ )",tableName,pkeyName,pkeyList];
+    return [PgSQLCommand executeBinaryFormat:sql params:paramList connection:conn_];
 }
 
 @end

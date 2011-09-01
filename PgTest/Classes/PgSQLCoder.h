@@ -39,7 +39,7 @@
 + (size_t)encodeTime:(NSDate*)val intoBuffer:(char *)buff maxSize:(size_t)maxSize;
 + (size_t)encodeTimestamp:(NSDate*)val intoBuffer:(char *)buff maxSize:(size_t)maxSize;
 + (size_t)encodeTimestampTZ:(NSDate*)val intoBuffer:(char *)buff maxSize:(size_t)maxSize;
-+ (size_t)encodeVarchar:(NSString*)invalue intoBuffer:(char *)outval maxLength:(size_t)size;
++ (size_t)encodeVarchar:(NSString*)invalue intoBuffer:(char *)outval maxSize:(size_t)size;
 + (size_t)encodeText:(NSString*)invalue intoBuffer:(char *)outval maxLength:(size_t)size;
 + (size_t)encodeBlob:(NSData*)invalue intoBuffer:(char *)outval maxSize:(size_t)size;
 

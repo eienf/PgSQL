@@ -7,11 +7,15 @@
 //
 
 #import "PgSQLWhereCommand.h"
+#import "PgSQLRecord.h"
 
 @interface PgSQLDelete : PgSQLWhereCommand
 {
-    NSArray *records_;
+    NSMutableArray *records_;
 }
-@property(nonatomic,retain,readwrite) NSArray *records;
+@property(nonatomic,retain,readwrite) NSMutableArray *records;
+
++ (PgSQLDelete*)deleteCommandWith:(PgSQLRecord*)aRecord connection:(PgSQLConnection*)con;
++ (PgSQLDelete*)deleteCommandFrom:(NSArray*)anArray connection:(PgSQLConnection*)con;
 
 @end

@@ -10,6 +10,15 @@
 
 @implementation PgSQLInsert
 
++ (PgSQLInsert*)insertCommandWith:(PgSQLRecord*)aRecord connection:(PgSQLConnection*)con
+{
+    if ( ![aRecord isKindOfClass:[PgSQLRecord class]] ) return nil;
+    PgSQLInsert *anInsert = [[PgSQLInsert alloc] init];
+    anInsert.conn = con;
+    anInsert.record = aRecord;
+    return [anInsert autorelease];
+}
+
 - (PgSQLResult*)execute
 {
     NSString *sql;

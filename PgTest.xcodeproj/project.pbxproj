@@ -581,7 +581,7 @@
 		7BACACE81409004500AE8C10 /* PgSQLRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLRecord.m; path = PgTest/Classes/PgSQLRecord.m; sourceTree = "<group>"; };
 		7BACACEA1409005F00AE8C10 /* PgSQLCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLCommand.h; path = PgTest/Classes/PgSQLCommand.h; sourceTree = "<group>"; };
 		7BACACEB1409006000AE8C10 /* PgSQLCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLCommand.m; path = PgTest/Classes/PgSQLCommand.m; sourceTree = "<group>"; };
-		7BACACED1409015600AE8C10 /* PgSQLWhereCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; name = PgSQLWhereCommand.h; path = PgTest/Classes/PgSQLWhereCommand.h; sourceTree = "<group>"; };
+		7BACACED1409015600AE8C10 /* PgSQLWhereCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLWhereCommand.h; path = PgTest/Classes/PgSQLWhereCommand.h; sourceTree = "<group>"; };
 		7BACACEE1409015700AE8C10 /* PgSQLWhereCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLWhereCommand.m; path = PgTest/Classes/PgSQLWhereCommand.m; sourceTree = "<group>"; };
 		7BACACF01409018C00AE8C10 /* PgSQLInsert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLInsert.h; path = PgTest/Classes/PgSQLInsert.h; sourceTree = "<group>"; };
 		7BACACF11409018C00AE8C10 /* PgSQLInsert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLInsert.m; path = PgTest/Classes/PgSQLInsert.m; sourceTree = "<group>"; };

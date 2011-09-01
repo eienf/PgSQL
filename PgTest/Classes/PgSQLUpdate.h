@@ -14,5 +14,6 @@
 
 }
 
++ (PgSQLUpdate*)updateCommandWith:(PgSQLRecord*)aRecord connection:(PgSQLConnection*)con;
 
 @end

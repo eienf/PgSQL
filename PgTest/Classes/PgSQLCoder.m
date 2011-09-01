@@ -177,7 +177,7 @@ static NSInteger secondsFromGMT_ = 32400;
             break;
         case VARCHAROID:
         {
-            [self encodeVarchar:value intoBuffer:buff maxLength:maxSize-1];
+            [self encodeVarchar:value intoBuffer:buff maxSize:maxSize];
             return buff;
         }
             break;
@@ -426,17 +426,17 @@ static NSInteger secondsFromGMT_ = 32400;
     return [self encodeInt64:st intoBuffer:outval maxSize:maxSize];
 }
 
-+ (size_t)encodeVarchar:(NSString*)invalue intoBuffer:(char *)outval maxLength:(size_t)size
++ (size_t)encodeVarchar:(NSString*)invalue intoBuffer:(char *)outval maxSize:(size_t)size
 {
     size_t aSize = [invalue lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
-    [invalue getCString:outval maxLength:size-1 encoding:NSUTF8StringEncoding];
-    if ( aSize > size - 1 ) aSize = size-1;
+    [invalue getCString:outval maxLength:size encoding:NSUTF8StringEncoding];
+    if ( aSize > size ) aSize = size;
     return aSize;
 }
 
 + (size_t)encodeText:(NSString*)invalue intoBuffer:(char *)outval maxLength:(size_t)size
 {
-    return [self encodeVarchar:invalue intoBuffer:outval maxLength:size];
+    return [self encodeVarchar:invalue intoBuffer:outval maxSize:size];
 }
 
 + (size_t)encodeBlob:(NSData*)invalue intoBuffer:(char *)outval maxSize:(size_t)size

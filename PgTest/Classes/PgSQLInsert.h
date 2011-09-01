@@ -13,6 +13,7 @@
 
 }
 
++ (PgSQLInsert*)insertCommandWith:(PgSQLRecord*)aRecord connection:(PgSQLConnection*)con;
 - (PgSQLRecord*)insertedRecord;
 
 @end

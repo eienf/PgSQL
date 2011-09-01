@@ -15,6 +15,9 @@
 #import "PgSQLCoder.h"
 #import "PgSQLQuery.h"
 #import "PgSQLRecord.h"
+#import "PgSQLInsert.h"
+#import "PgSQLUpdate.h"
+#import "PgSQLDelete.h"
 #import "string.h"
 
 
@@ -106,8 +109,6 @@
     STAssertTrue(strcmp([info cPassword:buff lenght:sizeof(buff)],"testtest")==0,@"Hostname does not match");
 }
 
-
-#if 0
 - (void)test02_Connection
 {
     NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
@@ -139,7 +140,7 @@
     }
     res = [PgSQLCommand executeBinaryFormat:@"select * from author where author_id = $1;"
                                    params:[NSArray arrayWithObject:
-                                           [PgSQLValue valueWithValue:[NSNumber numberWithInt:1] type:INT8OID]]
+                                           [PgSQLValue valueWithObject:[NSNumber numberWithInt:1] type:INT8OID]]
                                connection:con];
     if ( res != nil ) {
         STAssertTrue([res numOfTuples]==1,@"numOfTuples");
@@ -159,7 +160,6 @@
     [con disconnect];
     [con release];
 }
-#endif
 
 - (void)test03_Value
 {
@@ -180,6 +180,12 @@
     [anObject getBinary:buffer maxSize:sizeof(buffer)];
     [PgSQLValue valueWithBinary:buffer type:INT8OID];
     STAssertTrue([anObject longLongValue]==9876543210,@"Long Long");
+    [anObject setString:@"string value test."];
+    const char *temp = [anObject cStringValue];
+    size = [anObject getBufferSize];
+    STAssertEquals(strncmp(temp, [@"string value test." UTF8String], size-1), 0, @"cStringValue");
+    printf("temp = %s\n",temp);
+    free((void*)temp);
 }
 
 - (void)test04_Coder
@@ -199,7 +205,7 @@
     [PgSQLCoder encodeDouble:9876543210.0 intoBuffer:buffer maxSize:sizeof(buffer)];
     STAssertTrue([PgSQLCoder decodeDouble:buffer]==9876543210.0,@"Float64");
     NSString *aString = @"Ascii";
-    [PgSQLCoder encodeVarchar:aString intoBuffer:buffer maxLength:sizeof(buffer)-1];
+    [PgSQLCoder encodeVarchar:aString intoBuffer:buffer maxSize:sizeof(buffer)-1];
     STAssertTrue([aString isEqualToString:[PgSQLCoder decodeVarchar:buffer]],@"Varchar");
     [PgSQLCoder encodeText:aString intoBuffer:buffer maxLength:sizeof(buffer)-1];
     STAssertTrue([aString isEqualToString:[PgSQLCoder decodeText:buffer]],@"Text");
@@ -234,7 +240,6 @@
                  ,@"Date");
 }
 
-#if 0
 - (void)test05_Query
 {
     NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
@@ -289,10 +294,8 @@
     }
     [con release];
 }
-#endif
 
-#if 1
-- (void)test05_Query
+- (void)test06_Insert
 {
     NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
     PgSQLConnectionInfo *info = [PgSQLConnectionInfo connectionInfoWithURL:aUrl];
@@ -300,49 +303,68 @@
     con.connectionInfo = info;
     [con connect];
     if ( con.isConnected ) {
+        PgSQLResult *aResult;
         PgSQLQuery *aQuery;
         NSArray *anArray;
-        aQuery = [PgSQLQuery queryWithTable:@"author" where:nil forClass:nil orderBy:nil connection:con];
-        anArray = [aQuery queryRecords];
-        STAssertTrue([anArray count]==8,@"numOfTuples");
-        for ( PgSQLRecord *aRecord in anArray ) {
-            NSLog(@"%@",aRecord.attributes);
-        }
+        PgSQLRecord *bRecord;
+        PgSQLRecord *aRecord = [[[PgSQLRecord alloc] init] autorelease];
+        aRecord.tableName = @"author";
+        aRecord.pkeyName = @"author_id";
+        [aRecord setInt32:201 forColumnName:@"author_id"];
+        [aRecord setVarchar:@"Tim Cook,CEO" forColumnName:@"name"];
+        STAssertEquals([aRecord int32ForColumnName:@"author_id"], 201, @"PgSQLRecord author_id");
+        STAssertTrue([[aRecord varcharForColumnName:@"name"] isEqualToString:@"Tim Cook,CEO"], @"PgSQLRecord name");
+        NSLog(@"%@",aRecord.attributes);
 
-        aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id = 1" forClass:nil orderBy:nil connection:con];
+        PgSQLInsert *anInsert = [PgSQLInsert insertCommandWith:aRecord connection:con];
+        aResult = [anInsert execute];
+        STAssertTrue([aResult isOK], @"PgSQLInsert execute");
+        [aResult clear];
+
+        aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id = 201" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        STAssertTrue([anArray count]==1,@"numOfTuples");
-        for ( PgSQLRecord *aRecord in anArray ) {
-            NSLog(@"%@",aRecord.attributes);
-        }
-        
-        aQuery = [PgSQLQuery queryWithTable:@"author"
-                                      where:@"author_id > $1" 
-                                     params:[NSArray arrayWithObject:[PgSQLValue valueWithObject:[NSNumber numberWithInt:100] type:INT4OID]]
-                                   forClass:nil
-                                    orderBy:@"author_id"
-                                 connection:con];
-        anArray = [aQuery queryRecords];
-        STAssertTrue([anArray count]==2,@"numOfTuples");
-        for ( PgSQLRecord *aRecord in anArray ) {
-            NSLog(@"%@",aRecord.attributes);
-        }
-        
-        aQuery = [PgSQLQuery queryWithTable:@"author"
-                                columnNames:[NSArray arrayWithObject:@"author_id"]
-                                     params:[NSArray arrayWithObject:[PgSQLValue valueWithObject:[NSNumber numberWithInt:101] type:INT4OID]]
-                                   forClass:nil
-                                    orderBy:@"author_id"
-                                 connection:con];
-        anArray = [aQuery queryRecords];
-        STAssertTrue([anArray count]==1,@"numOfTuples");
-        for ( PgSQLRecord *aRecord in anArray ) {
-            NSLog(@"%@",aRecord.attributes);
-        }
+        NSLog(@"after inserted [%d]",[anArray count]);
+        STAssertEquals([anArray count], (NSUInteger)1, @"after inserted author_id");
+        bRecord = [anArray objectAtIndex:0];
+        NSLog(@"    %@",bRecord);
+        STAssertEquals([bRecord int32ForColumnName:@"author_id"], 201, @"PgSQLRecord author_id");
+        STAssertTrue([[bRecord varcharForColumnName:@"name"] isEqualToString:@"Tim Cook,CEO"], @"PgSQLRecord name");
+        bRecord.tableName = aRecord.tableName;
+        bRecord.pkeyName = aRecord.pkeyName;
+
+        [bRecord setVarchar:@"Barak Obama" forColumnName:@"name"];
+        STAssertTrue([[bRecord varcharForColumnName:@"name"] isEqualToString:@"Barak Obama"], @"PgSQLRecord name");
+
+        PgSQLUpdate *anUpdate = [PgSQLUpdate updateCommandWith:bRecord connection:con];
+        aResult = [anUpdate execute];
+        STAssertTrue([aResult isOK], @"PgSQLUpdate execute");
+        [aResult clear];
+
+        aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id = 201" forClass:nil orderBy:nil connection:con];
+        NSLog(@"after updated [%d]",[anArray count]);
+        STAssertEquals([anArray count], (NSUInteger)1, @"after updated author_id");
+        bRecord = [anArray objectAtIndex:0];
+        NSLog(@"    %@",bRecord);
+        STAssertEquals([bRecord int32ForColumnName:@"author_id"], 201, @"PgSQLRecord author_id");
+        STAssertTrue([[bRecord varcharForColumnName:@"name"] isEqualToString:@"Barak Obama"], @"PgSQLRecord name");
+
+        PgSQLDelete *aDelete = [PgSQLDelete deleteCommandFrom:[NSArray arrayWithObject:aRecord] connection:con];
+        aResult = [aDelete execute];
+        STAssertTrue([aResult isOK], @"PgSQLDelete execute");
+        [aResult clear];
+
+        aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id = 201" forClass:nil orderBy:nil connection:con];
+        aResult = [aQuery execute];
+        STAssertNotNil(aResult,@"aResult must be allocated.");
+        STAssertTrue([aResult numOfTuples]==0,@"numOfTuples");
+        [aResult clear];
+
         [con disconnect];
+    } else {
+        STAssertFalse(YES, @"connection failed");
     }
     [con release];
 }
-#endif
+
 
 @end

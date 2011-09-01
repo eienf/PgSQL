@@ -87,7 +87,11 @@
             paramValues[i] = malloc(size);
             [(PgSQLValue*)[anArray objectAtIndex:i] getBinary:paramValues[i] maxSize:size];
             paramTypes[i] = [(PgSQLValue*)[anArray objectAtIndex:i] type];
-            paramLengths[i] = [(PgSQLValue*)[anArray objectAtIndex:i] getBinarySize];
+            paramLengths[i] = [(PgSQLValue*)[anArray objectAtIndex:i] getBufferSize];
+            switch ( [(PgSQLValue*)[anArray objectAtIndex:i] type] ) {
+                case VARCHAROID: case TEXTOID:
+                    paramLengths[i]--; // string length
+            }
             paramFormats[i] = 1;
         }
         res = PQexecParams([conn conn],
