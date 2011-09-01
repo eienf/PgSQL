@@ -21,6 +21,7 @@
 
 + (NSArray*)insertCommandsFrom:(NSArray*)anArray connection:(PgSQLConnection*)con
 {
+    if ( [anArray count] == 0 ) return nil;
     NSMutableArray *result = [NSMutableArray arrayWithCapacity:[anArray count]];
     [anArray enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){
         PgSQLInsert *anObject = [PgSQLInsert insertCommandWith:obj connection:con];
@@ -31,7 +32,7 @@
     return result;
 }
 
-- (PgSQLResult*)execute
+- (PgSQLResult*)executeInsert
 {
     NSString *sql;
     NSArray *keys;
@@ -57,19 +58,31 @@
     return nil;
 }
 
-- (PgSQLRecord*)insertedRecord
+- (PgSQLResult*)executeSequence
 {
-    PgSQLResult *aResult = [self execute];
-    if ( ![aResult isOK] ) return nil;
-    PgSQLCommand *aCommand = [[PgSQLCommand alloc] init];
-    aCommand.conn = self.conn;
-    aCommand.isBinary = self.isBinary;
-    aCommand.format = [NSString stringWithFormat:@"SELECT currval(%@);",record_.pkeySequenceName];
-    aResult = [aCommand execute];
+    NSString *sql = [NSString stringWithFormat:@"SELECT currval(%@);",record_.pkeySequenceName];
+    PgSQLResult *aResult = [PgSQLCommand executeBinaryFormat:sql params:params_ connection:conn_];
     char *val = [aResult getValue:0 column:0];
     int type = [aResult getType:0];
     [record_ setBinary:val ofType:type forColumnName:record_.pkeyName];
-    return record_;
+    return aResult;
+}
+
+- (PgSQLResult*)execute
+{
+    PgSQLResult *aResult;
+    aResult = [self executeInsert];
+    if ( ![aResult isOK] ) return aResult;
+    if ( [record_.pkeySequenceName length] == 0 ) return aResult;
+    [aResult clear];
+    aResult = [self executeSequence];
+    if ( ![aResult isOK] ) return aResult;
+    return nil;
+}
+
+- (PgSQLRecord*)insertedRecord
+{
+    return self.record;
 }
 
 @end

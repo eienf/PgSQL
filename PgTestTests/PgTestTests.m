@@ -18,6 +18,7 @@
 #import "PgSQLInsert.h"
 #import "PgSQLUpdate.h"
 #import "PgSQLDelete.h"
+#import "PgSQLTransaction.h"
 #import "string.h"
 
 
@@ -317,7 +318,7 @@
         NSLog(@"%@",aRecord.attributes);
 
         PgSQLInsert *anInsert = [PgSQLInsert insertCommandWith:aRecord connection:con];
-        aResult = [anInsert execute];
+        aResult = [anInsert executeInsert];
         STAssertTrue([aResult isOK], @"PgSQLInsert execute");
         [aResult clear];
 
@@ -341,6 +342,7 @@
         [aResult clear];
 
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id = 201" forClass:nil orderBy:nil connection:con];
+        anArray = [aQuery queryRecords];
         NSLog(@"after updated [%d]",[anArray count]);
         STAssertEquals([anArray count], (NSUInteger)1, @"after updated author_id");
         bRecord = [anArray objectAtIndex:0];
@@ -363,6 +365,65 @@
     } else {
         STAssertFalse(YES, @"connection failed");
     }
+    [con release];
+}
+
+- (void)test06_Transaction
+{
+    NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
+    PgSQLConnectionInfo *info = [PgSQLConnectionInfo connectionInfoWithURL:aUrl];
+    PgSQLConnection *con = [[PgSQLConnection alloc] init];
+    con.connectionInfo = info;
+    [con connect];
+    if ( con.isConnected ) {
+        BOOL flag;
+//        PgSQLResult *aResult;
+        PgSQLTransaction *aTransaction;
+        PgSQLQuery *aQuery;
+        PgSQLRecord *aRecord;
+        NSArray *anArray;
+        NSArray *insertList;
+        NSMutableArray *recordArray = [NSMutableArray arrayWithCapacity:2];
+        aRecord = [[[PgSQLRecord alloc] init] autorelease];
+        aRecord.tableName = @"author";
+        aRecord.pkeyName = @"author_id";
+        [aRecord setInt32:301 forColumnName:@"author_id"];
+        [aRecord setVarchar:@"月亭八光" forColumnName:@"name"];
+        [recordArray addObject:aRecord];
+        aRecord = [[[PgSQLRecord alloc] init] autorelease];
+        aRecord.tableName = @"author";
+        aRecord.pkeyName = @"author_id";
+        [aRecord setInt32:302 forColumnName:@"author_id"];
+        [aRecord setVarchar:@"宇都宮まき" forColumnName:@"name"];
+        [recordArray addObject:aRecord];
+
+        insertList = [PgSQLInsert insertCommandsFrom:recordArray connection:con];
+        aTransaction = [PgSQLTransaction transactionWith:insertList connection:con];
+        flag = [aTransaction beginTransaction];
+        STAssertTrue(flag, @"begin transaction");
+        if ( !flag ) {
+            goto FINISH;
+        }
+        flag = [aTransaction execute];
+        STAssertTrue(flag, @"execuete transaction");
+        if ( !flag ) {
+            [aTransaction rollback];
+            goto FINISH;
+        }
+        aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 300" forClass:nil orderBy:nil connection:con];
+        anArray = [aQuery queryRecords];
+        NSLog(@"after insert [%d]",[anArray count]);
+        STAssertEquals([anArray count], (NSUInteger)2, @"after updated author_id");
+        NSLog(@"    %@",anArray);
+        [aTransaction rollback];
+        aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 300" forClass:nil orderBy:nil connection:con];
+        anArray = [aQuery queryRecords];
+        NSLog(@"after rollback [%d]",[anArray count]);
+        STAssertEquals([anArray count], (NSUInteger)0, @"after updated author_id");
+    } else {
+        STAssertFalse(YES, @"connection failed");
+    }
+FINISH:
     [con release];
 }
 

@@ -65,6 +65,7 @@
 {
     PgSQLResult *aResult = [PgSQLCommand executeString:@"BEGIN TRANSACTION;" connection:self.conn];
     BOOL flag = [aResult isOK];
+    NSLog(@"%s [%d] %@",__func__,[aResult resultStatus],[aResult resultMessage]);
     [aResult clear];
     return flag;    
 }
@@ -74,6 +75,7 @@
     for ( PgSQLCommand *aCommand in commands_ ) {
         PgSQLResult *aResult = [aCommand execute];
         if ( ![aResult isOK] ) {
+            NSLog(@"%s [%d] %@",__func__,[aResult resultStatus],[aResult resultMessage]);
             [aResult clear];
             return NO;
         }
