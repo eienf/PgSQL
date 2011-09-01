@@ -10,8 +10,6 @@
 
 @implementation PgSQLInsert
 
-@synthesize record = record_;
-
 - (PgSQLResult*)execute
 {
     NSString *sql;

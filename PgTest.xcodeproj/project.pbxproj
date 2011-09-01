@@ -26,7 +26,7 @@
 		7BACACE61409003400AE8C10 /* PgSQLResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACACE51409003300AE8C10 /* PgSQLResult.m */; };
 		7BACACE91409004500AE8C10 /* PgSQLRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACACE81409004500AE8C10 /* PgSQLRecord.m */; };
 		7BACACEC1409006000AE8C10 /* PgSQLCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACACEB1409006000AE8C10 /* PgSQLCommand.m */; };
-		7BACACEF1409015700AE8C10 /* PgSQLStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACACEE1409015700AE8C10 /* PgSQLStatement.m */; };
+		7BACACEF1409015700AE8C10 /* PgSQLWhereCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACACEE1409015700AE8C10 /* PgSQLWhereCommand.m */; };
 		7BACACF21409018C00AE8C10 /* PgSQLInsert.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACACF11409018C00AE8C10 /* PgSQLInsert.m */; };
 		7BACACF51409057C00AE8C10 /* PgSQLQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACACF41409057C00AE8C10 /* PgSQLQuery.m */; };
 		7BACACF81409059000AE8C10 /* PgSQLDelete.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACACF71409058F00AE8C10 /* PgSQLDelete.m */; };
@@ -35,6 +35,7 @@
 		7BACAD01140905DD00AE8C10 /* PgSQLRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD00140905DC00AE8C10 /* PgSQLRelationship.m */; };
 		7BACAD04140905F100AE8C10 /* PgSQLContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD03140905F100AE8C10 /* PgSQLContext.m */; };
 		7BACAD0614090FF900AE8C10 /* TestDB.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7BACAD0514090FF900AE8C10 /* TestDB.plist */; };
+		7BACAD0F140EB6DB00AE8C10 /* PgSQLSingleCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD0E140EB6D300AE8C10 /* PgSQLSingleCommand.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -580,8 +581,8 @@
 		7BACACE81409004500AE8C10 /* PgSQLRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLRecord.m; path = PgTest/Classes/PgSQLRecord.m; sourceTree = "<group>"; };
 		7BACACEA1409005F00AE8C10 /* PgSQLCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLCommand.h; path = PgTest/Classes/PgSQLCommand.h; sourceTree = "<group>"; };
 		7BACACEB1409006000AE8C10 /* PgSQLCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLCommand.m; path = PgTest/Classes/PgSQLCommand.m; sourceTree = "<group>"; };
-		7BACACED1409015600AE8C10 /* PgSQLStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLStatement.h; path = PgTest/Classes/PgSQLStatement.h; sourceTree = "<group>"; };
-		7BACACEE1409015700AE8C10 /* PgSQLStatement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLStatement.m; path = PgTest/Classes/PgSQLStatement.m; sourceTree = "<group>"; };
+		7BACACED1409015600AE8C10 /* PgSQLWhereCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; name = PgSQLWhereCommand.h; path = PgTest/Classes/PgSQLWhereCommand.h; sourceTree = "<group>"; };
+		7BACACEE1409015700AE8C10 /* PgSQLWhereCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLWhereCommand.m; path = PgTest/Classes/PgSQLWhereCommand.m; sourceTree = "<group>"; };
 		7BACACF01409018C00AE8C10 /* PgSQLInsert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLInsert.h; path = PgTest/Classes/PgSQLInsert.h; sourceTree = "<group>"; };
 		7BACACF11409018C00AE8C10 /* PgSQLInsert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLInsert.m; path = PgTest/Classes/PgSQLInsert.m; sourceTree = "<group>"; };
 		7BACACF31409057B00AE8C10 /* PgSQLQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLQuery.h; path = PgTest/Classes/PgSQLQuery.h; sourceTree = "<group>"; };
@@ -597,6 +598,8 @@
 		7BACAD02140905F000AE8C10 /* PgSQLContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLContext.h; path = PgTest/Classes/PgSQLContext.h; sourceTree = "<group>"; };
 		7BACAD03140905F100AE8C10 /* PgSQLContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLContext.m; path = PgTest/Classes/PgSQLContext.m; sourceTree = "<group>"; };
 		7BACAD0514090FF900AE8C10 /* TestDB.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestDB.plist; sourceTree = "<group>"; };
+		7BACAD0D140EB6C900AE8C10 /* PgSQLSingleCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLSingleCommand.h; path = PgTest/Classes/PgSQLSingleCommand.h; sourceTree = "<group>"; };
+		7BACAD0E140EB6D300AE8C10 /* PgSQLSingleCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLSingleCommand.m; path = PgTest/Classes/PgSQLSingleCommand.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1542,8 +1545,8 @@
 				7BACACE81409004500AE8C10 /* PgSQLRecord.m */,
 				7BACACEA1409005F00AE8C10 /* PgSQLCommand.h */,
 				7BACACEB1409006000AE8C10 /* PgSQLCommand.m */,
-				7BACACED1409015600AE8C10 /* PgSQLStatement.h */,
-				7BACACEE1409015700AE8C10 /* PgSQLStatement.m */,
+				7BACACED1409015600AE8C10 /* PgSQLWhereCommand.h */,
+				7BACACEE1409015700AE8C10 /* PgSQLWhereCommand.m */,
 				7BACACF01409018C00AE8C10 /* PgSQLInsert.h */,
 				7BACACF11409018C00AE8C10 /* PgSQLInsert.m */,
 				7BACACF31409057B00AE8C10 /* PgSQLQuery.h */,
@@ -1558,6 +1561,8 @@
 				7BACAD00140905DC00AE8C10 /* PgSQLRelationship.m */,
 				7BACAD02140905F000AE8C10 /* PgSQLContext.h */,
 				7BACAD03140905F100AE8C10 /* PgSQLContext.m */,
+				7BACAD0D140EB6C900AE8C10 /* PgSQLSingleCommand.h */,
+				7BACAD0E140EB6D300AE8C10 /* PgSQLSingleCommand.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1679,7 +1684,7 @@
 				7BACACE61409003400AE8C10 /* PgSQLResult.m in Sources */,
 				7BACACE91409004500AE8C10 /* PgSQLRecord.m in Sources */,
 				7BACACEC1409006000AE8C10 /* PgSQLCommand.m in Sources */,
-				7BACACEF1409015700AE8C10 /* PgSQLStatement.m in Sources */,
+				7BACACEF1409015700AE8C10 /* PgSQLWhereCommand.m in Sources */,
 				7BACACF21409018C00AE8C10 /* PgSQLInsert.m in Sources */,
 				7BACACF51409057C00AE8C10 /* PgSQLQuery.m in Sources */,
 				7BACACF81409059000AE8C10 /* PgSQLDelete.m in Sources */,
@@ -1687,6 +1692,7 @@
 				7BACACFE140905C500AE8C10 /* PgSQLTransaction.m in Sources */,
 				7BACAD01140905DD00AE8C10 /* PgSQLRelationship.m in Sources */,
 				7BACAD04140905F100AE8C10 /* PgSQLContext.m in Sources */,
+				7BACAD0F140EB6DB00AE8C10 /* PgSQLSingleCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

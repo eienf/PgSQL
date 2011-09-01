@@ -6,9 +6,9 @@
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import "PgSQLStatement.h"
+#import "PgSQLWhereCommand.h"
 
-@interface PgSQLQuery : PgSQLStatement
+@interface PgSQLQuery : PgSQLWhereCommand
 {
     Class recordClass_;
     NSString *orderBy_;

@@ -6,9 +6,9 @@
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import "PgSQLStatement.h"
+#import "PgSQLWhereCommand.h"
 
-@interface PgSQLDelete : PgSQLStatement
+@interface PgSQLDelete : PgSQLWhereCommand
 {
     NSArray *records_;
 }

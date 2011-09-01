@@ -10,8 +10,6 @@
 
 @implementation PgSQLUpdate
 
-@synthesize record = record_;
-
 - (PgSQLResult*)execute
 {
     NSString *sql;
@@ -29,8 +27,9 @@
         [params addObject:[NSString stringWithFormat:@"$%d",i+1]];
     }
     NSString *paramList = [params componentsJoinedByString:@", "];
+    NSString *whereStatement = [NSString stringWithFormat:@"%@ = %@",record_.pkeyName,[keys count]+1];
     sql = [NSString stringWithFormat:@"UPDATE %@ SET ( %@ ) = ( %@ ) WHERE %@;",
-           record_.tableName, keyList, paramList, whereStatement_ ];
+           record_.tableName, keyList, paramList, whereStatement ];
     return [PgSQLCommand executeBinaryFormat:sql params:params_ connection:conn_];
 }
 

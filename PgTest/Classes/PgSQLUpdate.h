@@ -6,14 +6,13 @@
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import "PgSQLStatement.h"
+#import "PgSQLSingleCommand.h"
 #import "PgSQLRecord.h"
 
-@interface PgSQLUpdate : PgSQLStatement
+@interface PgSQLUpdate : PgSQLSingleCommand
 {
-    PgSQLRecord *record_;
+
 }
-@property(nonatomic,retain,readwrite) PgSQLRecord *record;
 
 
 @end

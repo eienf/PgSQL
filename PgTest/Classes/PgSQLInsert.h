@@ -6,14 +6,12 @@
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import "PgSQLCommand.h"
-#import "PgSQLRecord.h"
+#import "PgSQLSingleCommand.h"
 
-@interface PgSQLInsert : PgSQLCommand
+@interface PgSQLInsert : PgSQLSingleCommand
 {
-    PgSQLRecord *record_;
+
 }
-@property(nonatomic,retain,readwrite) PgSQLRecord *record;
 
 - (PgSQLRecord*)insertedRecord;
 
