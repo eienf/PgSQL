@@ -43,6 +43,28 @@
     return [anObect autorelease];
 }
 
++ (NSArray*)deleteCommandsFrom:(NSArray*)anArray connection:(PgSQLConnection*)con
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    NSMutableArray *result = [NSMutableArray array];
+    [anArray enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){
+        NSString *tableName = [obj tableName];
+        NSMutableArray *arrayForTable = [dict objectForKey:tableName];
+        if ( arrayForTable == nil ) {
+            arrayForTable = [NSMutableArray array];
+            [dict setObject:arrayForTable forKey:tableName];
+        }
+        [arrayForTable addObject:obj];
+    }];
+    [dict enumerateKeysAndObjectsUsingBlock:^(id key,id obj,BOOL *stop){
+        PgSQLDelete *anObject = [PgSQLDelete deleteCommandFrom:obj connection:con];
+        if ( anObject != nil ) {
+            [result addObject:anObject];
+        }
+    }];
+    return result;
+}
+
 - (PgSQLResult*)execute
 {
     if ( ![self isBinary] ) return nil;

@@ -7,7 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PgSQLConnection.h"
 
 @interface PgSQLTransaction : NSObject
+{
+    NSMutableArray *commands_;
+    PgSQLConnection *conn_;
+}
+@property(nonatomic,retain,readwrite) NSMutableArray *commands;
+@property(nonatomic,retain,readwrite) PgSQLConnection *conn;
+
+
++ (PgSQLTransaction*)transactionWith:(NSArray*)anArray connection:(PgSQLConnection*)con;
+- (void)appendCommand:(PgSQLCommand*)aCommand;
+- (void)appendCommands:(NSArray*)anArray;
+- (BOOL)run;
+- (BOOL)beginTransaction;
+- (BOOL)execute;
+- (BOOL)commitEditing;
+- (void)rollback;
 
 @end

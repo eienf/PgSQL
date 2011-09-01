@@ -17,5 +17,6 @@
 
 + (PgSQLDelete*)deleteCommandWith:(PgSQLRecord*)aRecord connection:(PgSQLConnection*)con;
 + (PgSQLDelete*)deleteCommandFrom:(NSArray*)anArray connection:(PgSQLConnection*)con;
++ (NSArray*)deleteCommandsFrom:(NSArray*)anArray connection:(PgSQLConnection*)con;
 
 @end

@@ -19,6 +19,18 @@
     return [anInsert autorelease];
 }
 
++ (NSArray*)insertCommandsFrom:(NSArray*)anArray connection:(PgSQLConnection*)con
+{
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:[anArray count]];
+    [anArray enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){
+        PgSQLInsert *anObject = [PgSQLInsert insertCommandWith:obj connection:con];
+        if ( anObject != nil ) {
+            [result addObject:anObject];
+        }
+    }];
+    return result;
+}
+
 - (PgSQLResult*)execute
 {
     NSString *sql;

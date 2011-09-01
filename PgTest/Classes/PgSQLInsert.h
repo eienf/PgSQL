@@ -13,6 +13,7 @@
 
 }
 
++ (NSArray*)insertCommandsFrom:(NSArray*)anArray connection:(PgSQLConnection*)con;
 + (PgSQLInsert*)insertCommandWith:(PgSQLRecord*)aRecord connection:(PgSQLConnection*)con;
 - (PgSQLRecord*)insertedRecord;
 

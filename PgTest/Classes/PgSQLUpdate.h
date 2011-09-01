@@ -15,5 +15,6 @@
 }
 
 + (PgSQLUpdate*)updateCommandWith:(PgSQLRecord*)aRecord connection:(PgSQLConnection*)con;
++ (NSArray*)updateCommandsFrom:(NSArray*)anArray connection:(PgSQLConnection*)con;
 
 @end
