@@ -60,7 +60,7 @@
 
 - (PgSQLResult*)executeSequence
 {
-    NSString *sql = [NSString stringWithFormat:@"SELECT currval(%@);",record_.pkeySequenceName];
+    NSString *sql = [NSString stringWithFormat:@"SELECT currval('%@');",record_.pkeySequenceName];
     PgSQLResult *aResult = [PgSQLCommand executeBinaryFormat:sql params:params_ connection:conn_];
     char *val = [aResult getValue:0 column:0];
     int type = [aResult getType:0];
@@ -77,7 +77,7 @@
     [aResult clear];
     aResult = [self executeSequence];
     if ( ![aResult isOK] ) return aResult;
-    return nil;
+    return aResult;
 }
 
 - (PgSQLRecord*)insertedRecord

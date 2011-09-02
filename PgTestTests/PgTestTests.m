@@ -383,7 +383,11 @@
         PgSQLRecord *aRecord;
         NSArray *anArray;
         NSArray *insertList;
-        NSMutableArray *recordArray = [NSMutableArray arrayWithCapacity:2];
+        NSMutableArray *recordArray;
+
+        // 
+        
+        recordArray = [NSMutableArray arrayWithCapacity:2];
         aRecord = [[[PgSQLRecord alloc] init] autorelease];
         aRecord.tableName = @"author";
         aRecord.pkeyName = @"author_id";
@@ -443,8 +447,8 @@
         STAssertTrue(flag, @"commit transaction");
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 300" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        NSLog(@"after rollback [%d]",[anArray count]);
-        STAssertEquals([anArray count], (NSUInteger)2, @"after rollback count");
+        NSLog(@"after commit [%d]",[anArray count]);
+        STAssertEquals([anArray count], (NSUInteger)2, @"after commit count");
     } else {
         STAssertFalse(YES, @"connection failed");
     }
@@ -452,5 +456,141 @@ FINISH:
     [con release];
 }
 
+
+- (void)test07_Update
+{
+    NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
+    PgSQLConnectionInfo *info = [PgSQLConnectionInfo connectionInfoWithURL:aUrl];
+    PgSQLConnection *con = [[PgSQLConnection alloc] init];
+    con.connectionInfo = info;
+    [con connect];
+    if ( con.isConnected ) {
+        BOOL flag;
+        NSString *where;
+        NSDate *now = [NSDate date];
+        PgSQLResult *aResult;
+        PgSQLUpdate *anUpdate;
+        PgSQLTransaction *aTransaction;
+        PgSQLQuery *aQuery;
+        PgSQLRecord *aRecord;
+        PgSQLRecord *bRecord;
+        int32_t version;
+        int lastid;
+        NSArray *anArray;
+        NSArray *insertList;
+        NSMutableArray *recordArray;
+        
+        // Check last id
+        aResult = [PgSQLCommand executeString:@"select max(id) from basic" connection:con];
+        if ( aResult != nil ) {
+            if ( ![aResult isOK] ) {
+                [aResult clear];
+                goto FINISH;
+            }
+            char *result = [aResult getValue:0 column:0];
+            sscanf(result,"%d",&lastid);
+            printf("last id = %d\n",lastid);
+            [aResult clear];
+        }
+        
+        // Prepare Records
+        
+        recordArray = [NSMutableArray arrayWithCapacity:2];
+        aRecord = [[[PgSQLRecord alloc] init] autorelease];
+        aRecord.tableName = @"basic";
+        aRecord.pkeyName = @"id";
+        aRecord.pkeySequenceName = @"basic_id_seq";
+        [aRecord setTimestampTZ:now forColumnName:@"created"];
+        [aRecord setTimestamp:now forColumnName:@"modified"];
+        [aRecord setVarchar:@"basic test" forColumnName:@"name"];
+        [recordArray addObject:aRecord];
+        aRecord = [[[PgSQLRecord alloc] init] autorelease];
+        aRecord.tableName = @"basic";
+        aRecord.pkeyName = @"id";
+        aRecord.pkeySequenceName = @"basic_id_seq";
+        [aRecord setTimestampTZ:now forColumnName:@"created"];
+        [aRecord setTimestamp:now forColumnName:@"modified"];
+        [aRecord setInt32:1 forColumnName:@"version"];
+        [aRecord setVarchar:@"update test" forColumnName:@"name"];
+        [recordArray addObject:aRecord];
+        
+        // insert test records
+        insertList = [PgSQLInsert insertCommandsFrom:recordArray connection:con];
+        aTransaction = [PgSQLTransaction transactionWith:insertList connection:con];
+        flag = [aTransaction beginTransaction];
+        STAssertTrue(flag, @"begin transaction");
+        if ( !flag ) {
+            goto FINISH;
+        }
+        flag = [aTransaction execute];
+        STAssertTrue(flag, @"execuete transaction");
+        if ( !flag ) {
+            [aTransaction rollback];
+            goto FINISH;
+        }
+        
+        where = [NSString stringWithFormat:@"id > %d",lastid];
+        aQuery = [PgSQLQuery queryWithTable:@"basic" where:where forClass:nil orderBy:nil connection:con];
+        anArray = [aQuery queryRecords];
+        NSLog(@"after updated [%d]",[anArray count]);
+        STAssertEquals([anArray count], (NSUInteger)2, @"after updated count");
+        NSLog(@"    %@",anArray);
+        flag = [aTransaction commitEditing];
+        STAssertTrue(flag, @"commit transaction");
+        aQuery = [PgSQLQuery queryWithTable:@"basic" where:where forClass:nil orderBy:nil connection:con];
+        anArray = [aQuery queryRecords];
+        NSLog(@"after commit [%d]",[anArray count]);
+        STAssertEquals([anArray count], (NSUInteger)2, @"after commit count");
+
+        // Update record
+        version = [aRecord int32ForColumnName:@"version"];
+        [aRecord setInt32:++version forColumnName:@"version"];
+        anUpdate = [PgSQLUpdate updateCommandWith:aRecord connection:con];
+        aResult = [anUpdate execute];
+        STAssertNotNil(aResult,@"res must be allocated.");
+        STAssertTrue([aResult isOK], @"after updated count");
+        STAssertEquals([aRecord int32ForColumnName:@"version"], version, @"Version should equal");
+        NSLog(@"    %@",aRecord);
+
+
+        // check result
+        where = [NSString stringWithFormat:@"id = %d",lastid+2];
+        aQuery = [PgSQLQuery queryWithTable:@"basic" where:where forClass:nil orderBy:nil connection:con];
+        anArray = [aQuery queryRecords];
+        NSLog(@"after update [%d]",[anArray count]);
+        STAssertEquals([anArray count], (NSUInteger)1, @"after updated count");
+        bRecord = [anArray objectAtIndex:0];
+        NSLog(@"    %@",bRecord);
+        STAssertEquals([bRecord int32ForColumnName:@"version"], version, @"Version should equal");
+
+    } else {
+        STAssertFalse(YES, @"connection failed");
+    }
+FINISH:
+    [con release];
+}
+
+- (void)test08_ChangeValue
+{
+    NSDate *now = [NSDate date];
+    PgSQLRecord *aRecord;
+    int32_t version = 1;
+    aRecord = [[[PgSQLRecord alloc] init] autorelease];
+    aRecord.tableName = @"basic";
+    aRecord.pkeyName = @"id";
+    aRecord.pkeySequenceName = @"basic_id_seq";
+    [aRecord setTimestampTZ:now forColumnName:@"created"];
+    [aRecord setTimestamp:now forColumnName:@"modified"];
+    [aRecord setVarchar:@"basic test" forColumnName:@"name"];
+    [aRecord setInt32:version forColumnName:@"version"];
+
+    NSLog(@"attr = %@",aRecord.attributes);
+    NSLog(@"save = %@",aRecord.oldValues);
+
+
+    [aRecord setInt32:++version forColumnName:@"version"];
+    STAssertEquals([aRecord int32ForColumnName:@"version"], version, @"Version should equal");
+    NSLog(@"attr = %@",aRecord.attributes);
+}
 
 @end
