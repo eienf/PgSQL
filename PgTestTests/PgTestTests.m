@@ -398,6 +398,7 @@
         [recordArray addObject:aRecord];
 
         insertList = [PgSQLInsert insertCommandsFrom:recordArray connection:con];
+        // ROLLBACK TEST
         aTransaction = [PgSQLTransaction transactionWith:insertList connection:con];
         flag = [aTransaction beginTransaction];
         STAssertTrue(flag, @"begin transaction");
@@ -413,13 +414,37 @@
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 300" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
         NSLog(@"after insert [%d]",[anArray count]);
-        STAssertEquals([anArray count], (NSUInteger)2, @"after updated author_id");
+        STAssertEquals([anArray count], (NSUInteger)2, @"after updated count");
         NSLog(@"    %@",anArray);
         [aTransaction rollback];
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 300" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
         NSLog(@"after rollback [%d]",[anArray count]);
-        STAssertEquals([anArray count], (NSUInteger)0, @"after updated author_id");
+        STAssertEquals([anArray count], (NSUInteger)0, @"after rollback count");
+        // COMMIT TEST
+        aTransaction = [PgSQLTransaction transactionWith:insertList connection:con];
+        flag = [aTransaction beginTransaction];
+        STAssertTrue(flag, @"begin transaction");
+        if ( !flag ) {
+            goto FINISH;
+        }
+        flag = [aTransaction execute];
+        STAssertTrue(flag, @"execuete transaction");
+        if ( !flag ) {
+            [aTransaction rollback];
+            goto FINISH;
+        }
+        aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 300" forClass:nil orderBy:nil connection:con];
+        anArray = [aQuery queryRecords];
+        NSLog(@"after insert [%d]",[anArray count]);
+        STAssertEquals([anArray count], (NSUInteger)2, @"after updated count");
+        NSLog(@"    %@",anArray);
+        flag = [aTransaction commitEditing];
+        STAssertTrue(flag, @"commit transaction");
+        aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 300" forClass:nil orderBy:nil connection:con];
+        anArray = [aQuery queryRecords];
+        NSLog(@"after rollback [%d]",[anArray count]);
+        STAssertEquals([anArray count], (NSUInteger)2, @"after rollback count");
     } else {
         STAssertFalse(YES, @"connection failed");
     }

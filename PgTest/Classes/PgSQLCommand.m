@@ -67,6 +67,7 @@
 {
     PGresult *res;
     int nNumParams = [anArray count];
+    NSLog(@"%@",aFormat);
     if ( nNumParams == 0 ) {
         res = PQexecParams([conn conn],
                            [aFormat UTF8String],
@@ -131,6 +132,7 @@
     for ( int i = 0; i < nNumParams; i++ ) {
         paramValues[i] = [[anArray objectAtIndex:i] cStringWithMalloc];
     }
+	printf("(%s)\n",sql);
 	PGresult *res = PQexecParams([conn conn],
                                  sql,
                                  nNumParams, // int nNumParams,
