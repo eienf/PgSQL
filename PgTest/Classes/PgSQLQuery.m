@@ -139,6 +139,7 @@
         }
         PgSQLRecord *aRecord = [[[recordClass_ alloc] init] autorelease];
         [aRecord setAttributes:dict];
+        [aRecord setTableName:self.tableName];
         [anArray addObject:aRecord];
     }
     [result clear];

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "PgSQLValue.h"
+#import "PgSQLConnection.h"
 
 @interface PgSQLRecord : NSObject
 {
@@ -63,6 +64,17 @@
 - (PgSQLValue*)valueforColumnName:(NSString*)columnName;
 - (void)setValue:(PgSQLValue*)value forColumnName:(NSString*)columnName;
 - (void)setBinary:(const char *)val ofType:(Oid)type forColumnName:(NSString*)columnName;
+
+- (PgSQLRecord*)toOneRelationship:(NSString*)tableName 
+                         withPkey:(NSString*)pkeyName 
+                         forClass:(Class)recordClass 
+                          forFkey:(NSString*)fkeyName
+                       connection:(PgSQLConnection*)con;
+- (NSArray*)toManyRelationships:(NSString*)tableName 
+                       withFkey:(NSString*)pkeyName 
+                       forClass:(Class)recordClass 
+                        forPkey:(NSString*)fkeyName
+                     connection:(PgSQLConnection*)con;
 
 
 @end

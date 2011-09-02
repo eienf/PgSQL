@@ -593,4 +593,51 @@ FINISH:
     NSLog(@"attr = %@",aRecord.attributes);
 }
 
+
+- (void)test09_Relation
+{
+    NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
+    PgSQLConnectionInfo *info = [PgSQLConnectionInfo connectionInfoWithURL:aUrl];
+    PgSQLConnection *con = [[PgSQLConnection alloc] init];
+    con.connectionInfo = info;
+    [con connect];
+    if ( con.isConnected ) {
+        // toMany
+        PgSQLQuery *aQuery;
+        NSArray *anArray;
+        aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 100" forClass:nil orderBy:nil connection:con];
+        anArray = [aQuery queryRecords];
+        for ( PgSQLRecord *aRecord in anArray ) {
+            NSLog(@"AUTHOR = %@",aRecord);
+            NSArray *relations = [aRecord toManyRelationships:@"comic"
+                                                     withFkey:@"author_id"
+                                                     forClass:nil
+                                                      forPkey:@"author_id"
+                                                   connection:con];
+            for ( PgSQLRecord *comic in relations ) {
+                NSLog(@"COMIC = %@",comic);
+                STAssertEquals([aRecord int32ForColumnName:@"author_id"], 
+                               [comic int32ForColumnName:@"author_id"],
+                               @"same key(pkey==fkey)");
+            }
+        }
+        aQuery = [PgSQLQuery queryWithTable:@"comic" where:@"author_id > 100" forClass:nil orderBy:nil connection:con];
+        anArray = [aQuery queryRecords];
+        for ( PgSQLRecord *aRecord in anArray ) {
+            NSLog(@"COMIC = %@",aRecord);
+            PgSQLRecord *author = [aRecord toOneRelationship:@"author"
+                                                    withPkey:@"author_id"
+                                                    forClass:nil
+                                                     forFkey:@"author_id"
+                                                  connection:con];
+            NSLog(@"AUHOR = %@",author);
+            STAssertEquals([aRecord int32ForColumnName:@"author_id"], 
+                           [author int32ForColumnName:@"author_id"],
+                           @"same key(pkey==fkey)");
+        }
+        [con disconnect];
+    }
+    [con release];
+}
+
 @end

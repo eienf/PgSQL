@@ -7,7 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PgSQLRecord.h"
 
 @interface PgSQLRelationship : NSObject
+{
+    NSString *toOneName;
+    NSString *toManyName;
+    NSString *masterTableName;
+    NSString *detailTableName;
+    NSString *pkeyName;
+    NSString *fkeyName;
+    PgSQLRecord *master;
+    NSMutableArray *details;
+}
 
 @end

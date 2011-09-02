@@ -8,6 +8,7 @@
 
 #import "PgSQLRecord.h"
 #import "PgSQLValue.h"
+#import "PgSQLQuery.h"
 
 @implementation PgSQLRecord
 
@@ -285,9 +286,46 @@
     return (object==nil)||(object==[NSNull null]);   
 }
 
+#pragma mark Relationship
+
+- (PgSQLRecord*)toOneRelationship:(NSString*)tableName 
+                         withPkey:(NSString*)pkeyName 
+                         forClass:(Class)recordClass 
+                          forFkey:(NSString*)fkeyName
+                       connection:(PgSQLConnection*)con
+{
+    NSString *whereString = [NSString stringWithFormat:@"%@ = $1",pkeyName];
+    PgSQLQuery *aQuery = [PgSQLQuery queryWithTable:tableName
+                                              where:whereString
+                                             params:[NSArray arrayWithObject:[self valueforColumnName:fkeyName]]
+                                           forClass:recordClass
+                                            orderBy:nil
+                                         connection:con];
+    NSArray *anArray = [aQuery queryRecords];
+    if ( [anArray count] == 0 ) return nil;
+    return [anArray objectAtIndex:0];
+}
+
+- (NSArray*)toManyRelationships:(NSString*)tableName 
+                       withFkey:(NSString*)pkeyName 
+                       forClass:(Class)recordClass 
+                        forPkey:(NSString*)fkeyName
+                     connection:(PgSQLConnection*)con
+{
+    NSString *whereString = [NSString stringWithFormat:@"%@ = $1",fkeyName];
+    PgSQLQuery *aQuery = [PgSQLQuery queryWithTable:tableName
+                                              where:whereString
+                                             params:[NSArray arrayWithObject:[self valueforColumnName:pkeyName]]
+                                           forClass:recordClass
+                                            orderBy:nil
+                                         connection:con];
+    return [aQuery queryRecords];
+}
+
 - (NSString*)description
 {
-    return [NSString stringWithFormat:@"<%@> %@",[self className],attributes_];
+    return [NSString stringWithFormat:@"<%@> %@(%@,%@) \n %@",
+            [self className],self.tableName, self.pkeyName, self.pkeySequenceName ,attributes_];
 }
 
 @end
