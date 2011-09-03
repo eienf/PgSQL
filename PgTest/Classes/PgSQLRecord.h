@@ -76,5 +76,11 @@
                         forPkey:(NSString*)fkeyName
                      connection:(PgSQLConnection*)con;
 
+- (void)valueWillChangeForColumnName:(NSString*)columnName;
+- (void)valueDidChangeForColumnName:(NSString*)columnName;
+- (void)relatedValue:(PgSQLRecord*)aRecord willChangeForColumnName:(NSString*)columnName;
+- (void)relatedValue:(PgSQLRecord*)aRecord didChangeForColumnName:(NSString*)columnName;
+- (void)revertChanges;
+- (void)didSaveChanges;
 
 @end

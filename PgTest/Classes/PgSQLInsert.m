@@ -64,7 +64,9 @@
     PgSQLResult *aResult = [PgSQLCommand executeBinaryFormat:sql params:params_ connection:conn_];
     char *val = [aResult getValue:0 column:0];
     int type = [aResult getType:0];
+    [record_ valueWillChangeForColumnName:record_.pkeyName];
     [record_ setBinary:val ofType:type forColumnName:record_.pkeyName];
+    [record_ valueDidChangeForColumnName:record_.pkeyName];
     return aResult;
 }
 
@@ -76,7 +78,9 @@
     if ( [record_.pkeySequenceName length] == 0 ) return aResult;
     [aResult clear];
     aResult = [self executeSequence];
-    if ( ![aResult isOK] ) return aResult;
+    if ( [aResult isOK] ) {
+        [record_ didSaveChanges];
+    }
     return aResult;
 }
 

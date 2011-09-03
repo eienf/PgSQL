@@ -70,5 +70,6 @@
 - (void)setData:(NSData*)object;
 
 - (NSString*)description;
+- (BOOL)isNullValue;
 
 @end

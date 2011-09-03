@@ -37,6 +37,9 @@
 
 - (BOOL)isTemp
 {
+    if ( [self.pkeyName length] == 0 ) return NO;
+    PgSQLValue *aValue = [self valueforColumnName:self.pkeyName];
+    if ( aValue == nil || [aValue isNullValue] ) return YES;
     return NO;
 }
 
@@ -326,6 +329,35 @@
 {
     return [NSString stringWithFormat:@"<%@> %@(%@,%@) \n %@",
             [self className],self.tableName, self.pkeyName, self.pkeySequenceName ,attributes_];
+}
+
+- (void)valueWillChangeForColumnName:(NSString*)columnName
+{
+}
+
+- (void)valueDidChangeForColumnName:(NSString*)columnName
+{
+}
+
+- (void)relatedValue:(PgSQLRecord*)aRecord willChangeForColumnName:(NSString*)columnName
+{
+    
+}
+
+- (void)relatedValue:(PgSQLRecord*)aRecord didChangeForColumnName:(NSString*)columnName
+{
+    
+}
+
+- (void)revertChanges
+{
+    self.attributes = [self.oldValues mutableCopy];
+    self.oldValues = nil;
+}
+
+- (void)didSaveChanges
+{
+    self.oldValues = nil;
 }
 
 @end

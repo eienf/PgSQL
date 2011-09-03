@@ -36,6 +36,9 @@
 		7BACAD04140905F100AE8C10 /* PgSQLContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD03140905F100AE8C10 /* PgSQLContext.m */; };
 		7BACAD0614090FF900AE8C10 /* TestDB.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7BACAD0514090FF900AE8C10 /* TestDB.plist */; };
 		7BACAD0F140EB6DB00AE8C10 /* PgSQLSingleCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD0E140EB6D300AE8C10 /* PgSQLSingleCommand.m */; };
+		7BACAD121411337100AE8C10 /* Author.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD111411337000AE8C10 /* Author.m */; };
+		7BACAD151411338400AE8C10 /* Comic.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD141411338300AE8C10 /* Comic.m */; };
+		7BACAD181411E5F700AE8C10 /* TestDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BACAD171411E5F600AE8C10 /* TestDB.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -600,6 +603,12 @@
 		7BACAD0514090FF900AE8C10 /* TestDB.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestDB.plist; sourceTree = "<group>"; };
 		7BACAD0D140EB6C900AE8C10 /* PgSQLSingleCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLSingleCommand.h; path = PgTest/Classes/PgSQLSingleCommand.h; sourceTree = "<group>"; };
 		7BACAD0E140EB6D300AE8C10 /* PgSQLSingleCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLSingleCommand.m; path = PgTest/Classes/PgSQLSingleCommand.m; sourceTree = "<group>"; };
+		7BACAD101411336F00AE8C10 /* Author.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Author.h; sourceTree = "<group>"; };
+		7BACAD111411337000AE8C10 /* Author.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Author.m; sourceTree = "<group>"; };
+		7BACAD131411338300AE8C10 /* Comic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comic.h; sourceTree = "<group>"; };
+		7BACAD141411338300AE8C10 /* Comic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comic.m; sourceTree = "<group>"; };
+		7BACAD161411E5F600AE8C10 /* TestDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestDB.h; sourceTree = "<group>"; };
+		7BACAD171411E5F600AE8C10 /* TestDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestDB.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -672,6 +681,12 @@
 				7B5E26A713FB7921007D9F5B /* PgAppDelegate.m */,
 				7B5E26A913FB7921007D9F5B /* MainMenu.xib */,
 				7B5E269B13FB7920007D9F5B /* Supporting Files */,
+				7BACAD101411336F00AE8C10 /* Author.h */,
+				7BACAD111411337000AE8C10 /* Author.m */,
+				7BACAD131411338300AE8C10 /* Comic.h */,
+				7BACAD141411338300AE8C10 /* Comic.m */,
+				7BACAD161411E5F600AE8C10 /* TestDB.h */,
+				7BACAD171411E5F600AE8C10 /* TestDB.m */,
 			);
 			path = PgTest;
 			sourceTree = "<group>";
@@ -1693,6 +1708,9 @@
 				7BACAD01140905DD00AE8C10 /* PgSQLRelationship.m in Sources */,
 				7BACAD04140905F100AE8C10 /* PgSQLContext.m in Sources */,
 				7BACAD0F140EB6DB00AE8C10 /* PgSQLSingleCommand.m in Sources */,
+				7BACAD121411337100AE8C10 /* Author.m in Sources */,
+				7BACAD151411338400AE8C10 /* Comic.m in Sources */,
+				7BACAD181411E5F700AE8C10 /* TestDB.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

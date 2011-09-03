@@ -303,6 +303,11 @@
     }
 }
 
+- (BOOL)isNullValue
+{
+    return (value_ == nil) || (value_ == [NSNull null]);
+}
+
 - (NSString*)description
 {
     return [NSString stringWithFormat:@"<%@> %@:%@",[self className],[self oidName],self.value];
