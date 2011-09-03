@@ -7,6 +7,8 @@
 //
 
 #import "Comic.h"
+#import "TestDB.h"
+#import "PgSQLQuery.h"
 
 @interface Comic ()
 @property(nonatomic,assign,readwrite) Author *author_;
@@ -31,6 +33,17 @@
     [super dealloc];
 }
 
++ (NSArray*)loadAllObjects
+{
+    PgSQLQuery *aQuery = [PgSQLQuery queryWithTable:@"comic"
+                                              where:nil
+                                           forClass:[self class]
+                                            orderBy:nil
+                                         connection:[[TestDB testDB] connection]];
+    return [aQuery queryRecords];
+}
+
+
 - (NSInteger)comicId
 {
     return [self int32ForColumnName:@"comic_id"];
@@ -48,7 +61,7 @@
                                      withPkey:@"author_id"
                                      forClass:[Author class]
                                       forFkey:@"author_id"
-                                   connection:[PgSQLConnection defaultConnection]];
+                                        connection:[[TestDB testDB] connection]];
     }
     return author_;
 }
@@ -82,5 +95,9 @@
     [self setVarchar:name forColumnName:@"name"];
 }
 
++ (NSArray*)relationshipNames
+{
+    return [NSArray arrayWithObjects:@"author", nil];
+}
 
 @end

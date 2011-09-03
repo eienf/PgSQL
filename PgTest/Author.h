@@ -20,5 +20,7 @@
 
 - (void)addObjectToComics:(Comic*)anObject;
 - (void)removeObjectFromToComics:(Comic*)anObject;
++ (NSArray*)loadAllObjects;
++ (NSArray*)relationshipNames;
 
 @end

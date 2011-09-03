@@ -18,4 +18,7 @@
 @property(nonatomic,assign,readwrite) NSString *name;
 @property(nonatomic,assign,readwrite) Author *author;
 
++ (NSArray*)loadAllObjects;
++ (NSArray*)relationshipNames;
+
 @end
