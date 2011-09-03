@@ -10,6 +10,8 @@
 #import "TestDB.h"
 #import "Author.h"
 #import "Comic.h"
+#import "PgSQLUpdate.h"
+#import "PgSQLResult.h"
 
 @interface PgAppDelegate ()
 - (void)preparePopups;
@@ -163,6 +165,16 @@ hasNoselect:(BOOL)noselect;
     [_relashonSelect setEnabled:NO];
 }
 
+#pragma transaction
+
+- (BOOL)updateRecord:(PgSQLRecord*)aRecord
+{
+    PgSQLUpdate *anUpdate = [PgSQLUpdate updateCommandWith:aRecord
+                                                connection:[[TestDB testDB] connection]];
+    PgSQLResult *aResult = [anUpdate execute];
+    return [aResult isOK];
+}
+
 #pragma mark NSTableViewDelegate
 
 - (void)makeTableColumns
@@ -188,6 +200,26 @@ hasNoselect:(BOOL)noselect;
     PgSQLRecord *aRecord = [self.tableList objectAtIndex:rowIndex];
     NSString *columnName = [aTableColumn identifier];
     return [aRecord objectForColumnName:columnName];
+}
+
+- (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    PgSQLRecord *aReocrd = [tableList_ objectAtIndex:row];
+    if ( [[tableColumn identifier] isEqualToString:aReocrd.pkeyName] ) return NO;
+    return YES;
+}
+
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    PgSQLRecord *aRecord = [tableList_ objectAtIndex:row];
+    NSString *columnName = [tableColumn identifier];
+    if ( [columnName isEqualToString:aRecord.pkeyName] ) return;
+    [aRecord setObject:object forColumnName:columnName];
+    if ( ![self updateRecord:aRecord] ) {
+        [aRecord revertChanges];
+        [tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row]
+                             columnIndexes:nil];
+    }
 }
 
 @end

@@ -94,4 +94,19 @@
     return [NSArray arrayWithObjects:@"toComics", nil];
 }
 
+- (void)setObject:(id)object forColumnName:(NSString *)columnName
+{
+    if ( [columnName isEqualToString:@"name"] ) {
+        if ( [object isKindOfClass:[NSString class]] ) {
+            [self setName:object];
+        }
+    } else if ( [columnName isEqualToString:@"author_id"] ) {
+        if ( [object isKindOfClass:[NSString class]] ||
+            [object isKindOfClass:[NSNumber class]] ) {
+            NSInteger val = [object integerValue];
+            [self setAuthorId:val];
+        }
+    }
+}
+
 @end
