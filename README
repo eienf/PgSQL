@@ -1,0 +1,122 @@
+THIS IS A VERY EXPERIMENTAL IMPLEMENTATION FOR 
+
+    Cocoa Objective-C for Mac OS X wrapper of PostgreSQL libpq C client library
+
+This project needs PostgreSQL 9.0.4 for Mac OS X 10.6 Snow Leopard.
+
+Please NOTE the connection PostgreSQL server - client intaraction is 
+very specific with their configuration. Especially Character Encoding,
+Datetime format.
+
+I only implement & confirm to my configuration.
+UFT8 Japanese Encoding
+Timezone Japanese Standard Time.
+Binary long long integer packet.
+Big Endian Host byte order.
+assume every tabel has one integer(32/64) primary key.
+
+I don't care thread safety by now.
+
+and there are lots of limitations.
+
+please report bug, and welcome any suggestion to improve my codes.
+
+    
+This contains very basic functions in some classes.
+
+PostgreSQL - the main codes for wrappers and libpq(static library and heades)
+    Classes - THE MAIN CLASSES
+
+- main wrapper classes
+PgSQLConnection ...    Connect to Database
+PgSQLConnectionInfo ...    Connect information, it can load from plist.
+PgSQLCommand ... execute commands.
+PgSQLResult ... result value from execution.
+
+-- value conversion wrapper classes
+PgSQLCoder ... conversion utility functions, binary packet <--> Objective-C data.
+PgSQLValue ... value holder.
+PgSQLRecord ... a record for a table.
+
+-- SQL command wrapper classes
+PgSQLSingleCommand ... abstract class for effects only one record.
+PgSQLInsert ... subclass of PgSQLSingleCommand, insert one record into a table. 
+    can set primary key by automatic generate sequence.
+PgSQLUpdate ... subclass of PgSQLSingleCommand, update one record into a table. 
+PgSQLWhereCommand ... abstract class for effects some records in a table. specified by where clause.
+PgSQLDelete ... subclass of PgSQLWhereCommand, deletes some records.
+PgSQLQuery ... subclass of PgSQLWhereCommand, select some records in a table.
+PgSQLTransaction ... subclass of PgSQLCommand, execute some comands in transaction.
+    can rollback, if any errors happens in seriese of commands.
+
+-- not used
+PgSQLContext
+PgSQLRelationship
+
+
+PgTestTests
+
+Unit test codes.
+
+PgTest - sample client application with GUI.
+
+This needs database following:
+
+CREATE TABLE author
+(
+  "name" character varying(256),
+  author_id integer NOT NULL,
+  CONSTRAINT author_pkey PRIMARY KEY (author_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE author OWNER TO testuser;
+
+CREATE TABLE comic
+(
+  title character varying(256),
+  author_id integer,
+  comic_id integer NOT NULL,
+  CONSTRAINT comic_pkey PRIMARY KEY (comic_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE comic OWNER TO testuser;
+
+CREATE TABLE basic
+(
+  id serial NOT NULL,
+  created timestamp with time zone,
+  modified timestamp without time zone,
+  "name" character varying(128) NOT NULL,
+  "version" integer DEFAULT 0,
+  CONSTRAINT basic_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE basic OWNER TO testuser;
+
+CREATE TABLE datatype
+(
+  i0 serial NOT NULL,
+  i1 integer,
+  i2 bigint,
+  b boolean,
+  r1 real,
+  r2 double precision,
+  s1 character varying(32),
+  s2 text,
+  t1 date,
+  t2 time without time zone,
+  t3 timestamp without time zone,
+  t4 timestamp with time zone,
+  d bytea,
+  CONSTRAINT datatype_pkey_id PRIMARY KEY (i0)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE datatype OWNER TO testuser;
