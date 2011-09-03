@@ -11,6 +11,7 @@
 #import "Author.h"
 #import "Comic.h"
 #import "PgSQLInsert.h"
+#import "PgSQLDelete.h"
 #import "PgSQLUpdate.h"
 #import "PgSQLResult.h"
 
@@ -139,6 +140,9 @@ hasNoselect:(BOOL)noselect;
 }
 
 - (IBAction)deleteAction:(id)sender {
+    NSInteger row = [_tableView selectedRow];
+    PgSQLRecord *aRecord = [tableList_ objectAtIndex:row];
+    [self deleteRecord:aRecord];
 }
 
 - (NSMenu*)preparePopup:(NSPopUpButton*)thePopupButton 
@@ -214,7 +218,14 @@ hasNoselect:(BOOL)noselect;
 
 - (BOOL)deleteRecord:(PgSQLRecord*)aRecord
 {
-    return NO;   
+    PgSQLDelete *aCommand = [PgSQLDelete deleteCommandWith:aRecord
+                                                connection:[[TestDB testDB] connection]];
+    PgSQLResult *aResult = [aCommand execute];
+    if ( [aResult isOK] ) {
+        [tableList_ removeObject:aRecord];
+        [_tableView reloadData];
+    }
+    return [aResult isOK];
 }
 
 #pragma mark NSTableViewDelegate

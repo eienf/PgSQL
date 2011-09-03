@@ -37,6 +37,20 @@
 
 + (PgSQLDelete*)deleteCommandFrom:(NSArray*)anArray connection:(PgSQLConnection*)con
 {
+    __block NSString *tableName;
+    __block BOOL failed = NO;
+    [anArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ( [tableName length] == 0 ) {
+            tableName = [obj tableName];
+        } else if ( ![tableName isEqualToString:[obj tableName]] ) {
+            failed = YES;
+            *stop = YES;
+        }
+    }];
+    if ( failed ) {
+        NSLog(@"all record must be in same table.");
+        return nil;   
+    }
     PgSQLDelete *anObect = [[PgSQLDelete alloc] init];
     anObect.conn = con;
     [anObect.records addObjectsFromArray:anArray];
