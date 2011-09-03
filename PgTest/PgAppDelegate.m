@@ -79,6 +79,39 @@ hasNoselect:(BOOL)noselect;
 }
 
 - (IBAction)relashonDidChanged:(id)sender {
+    NSString *aString = [[_relashonSelect selectedItem] title];
+    NSInteger rowIndex = [_tableView selectedRow];
+    PgSQLRecord *aRecord = [tableList_ objectAtIndex:rowIndex];
+    id relation = [aRecord performSelector:NSSelectorFromString(aString)];
+    if ( relation == nil ) {
+        [_relashonSelect selectItemAtIndex:0];
+        return;
+    }
+    if ( ![relation isKindOfClass:[NSArray class]] ) {
+        relation = [NSArray arrayWithObject:relation];
+    }
+    self.tableList = relation;
+    aRecord = [relation objectAtIndex:0];
+    for ( NSMenuItem *anItem in [_tableSelect itemArray] ) {
+        if ( [[anItem title] compare:aRecord.tableName options:NSCaseInsensitiveSearch]
+            == NSOrderedSame ) {
+            [_tableSelect selectItem:anItem];
+            break;
+        }
+    }
+    aString = [[_tableSelect selectedItem] title];
+    if ( [aString isEqualToString:@"Author"] ) {
+        [self preparePopup:_relashonSelect
+                   forList:[Author relationshipNames] 
+               hasNoselect:YES];
+    } else if ( [aString isEqualToString:@"Comic"] ) {
+        [self preparePopup:_relashonSelect
+                   forList:[Comic relationshipNames] 
+               hasNoselect:YES];
+    }
+    [_relashonSelect setEnabled:YES];
+    [self makeTableColumns];
+    [_tableView reloadData];
 }
 
 - (NSMenu*)preparePopup:(NSPopUpButton*)thePopupButton 
