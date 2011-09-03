@@ -2,8 +2,8 @@
 //  TestDB.m
 //  PgTest
 //
-//  Created by 黒木 政幸 on 11/09/03.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+//  Created by eien.support@gmail.com on 11/09/03.
+//  Copyright (c) 2011 "Eien Factory". All rights reserved.
 //
 
 #import "TestDB.h"
