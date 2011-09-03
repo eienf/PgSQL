@@ -22,5 +22,6 @@
 - (void)removeObjectFromToComics:(Comic*)anObject;
 + (NSArray*)loadAllObjects;
 + (NSArray*)relationshipNames;
-
++ (Author*)authorWithName:(NSString*)aName andId:(NSInteger)anId;
+   
 @end

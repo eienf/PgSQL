@@ -109,4 +109,14 @@
     }
 }
 
++ (Author*)authorWithName:(NSString*)aName andId:(NSInteger)anId
+{
+    Author *newObject = [[Author alloc] init];
+    [newObject setAuthorId:anId];
+    [newObject setName:aName];
+    newObject.oldValues = nil;
+    return [newObject autorelease];
+}
+
+
 @end

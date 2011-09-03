@@ -10,6 +10,7 @@
 #import "TestDB.h"
 #import "Author.h"
 #import "Comic.h"
+#import "PgSQLInsert.h"
 #import "PgSQLUpdate.h"
 #import "PgSQLResult.h"
 
@@ -19,6 +20,9 @@
 forList:(NSArray*)theList
 hasNoselect:(BOOL)noselect;
 - (void)makeTableColumns;
+- (BOOL)updateRecord:(PgSQLRecord*)aRecord;
+- (BOOL)insertRecord:(PgSQLRecord*)aRecord;
+- (BOOL)deleteRecord:(PgSQLRecord*)aRecord;
 @end
 
 @implementation PgAppDelegate
@@ -64,12 +68,12 @@ hasNoselect:(BOOL)noselect;
         [self preparePopup:_relashonSelect
                    forList:[Author relationshipNames] 
                hasNoselect:YES];
-        self.tableList = [Author loadAllObjects];
+        self.tableList = [[Author loadAllObjects] mutableCopy];
     } else if ( [aString isEqualToString:@"Comic"] ) {
         [self preparePopup:_relashonSelect
                    forList:[Comic relationshipNames] 
                hasNoselect:YES];
-        self.tableList = [Comic loadAllObjects];
+        self.tableList = [[Comic loadAllObjects] mutableCopy];
     }
     [_relashonSelect setEnabled:YES];
     [self makeTableColumns];
@@ -114,6 +118,27 @@ hasNoselect:(BOOL)noselect;
     [_relashonSelect setEnabled:YES];
     [self makeTableColumns];
     [_tableView reloadData];
+}
+
+- (IBAction)insertAction:(id)sender {
+    __block NSInteger anId = 0;
+    PgSQLRecord *aRecord;
+    NSString *aString = [[_tableSelect selectedItem] title];
+    if ( [aString isEqualToString:@"Author"] ) {
+        [tableList_ enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if ( anId < [obj authorId] ) anId = [obj authorId];
+        }];
+        aRecord = [Author authorWithName:@"" andId:anId+1];
+    } else if ( [aString isEqualToString:@"Comic"] ) {
+        [tableList_ enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if ( anId < [obj comicId] ) anId = [obj comicId];
+        }];
+        aRecord = [Comic comicWithTitle:@"" authorId:0 andId:anId+1];
+    }
+    [self insertRecord:aRecord];
+}
+
+- (IBAction)deleteAction:(id)sender {
 }
 
 - (NSMenu*)preparePopup:(NSPopUpButton*)thePopupButton 
@@ -169,10 +194,27 @@ hasNoselect:(BOOL)noselect;
 
 - (BOOL)updateRecord:(PgSQLRecord*)aRecord
 {
-    PgSQLUpdate *anUpdate = [PgSQLUpdate updateCommandWith:aRecord
+    PgSQLUpdate *aCommand = [PgSQLUpdate updateCommandWith:aRecord
                                                 connection:[[TestDB testDB] connection]];
-    PgSQLResult *aResult = [anUpdate execute];
+    PgSQLResult *aResult = [aCommand execute];
     return [aResult isOK];
+}
+
+- (BOOL)insertRecord:(PgSQLRecord*)aRecord
+{
+    PgSQLInsert *aCommand = [PgSQLInsert insertCommandWith:aRecord
+                                                connection:[[TestDB testDB] connection]];
+    PgSQLResult *aResult = [aCommand execute];
+    if ( [aResult isOK] ) {
+        [tableList_ addObject:aRecord];
+        [_tableView reloadData];
+    }
+    return [aResult isOK];
+}
+
+- (BOOL)deleteRecord:(PgSQLRecord*)aRecord
+{
+    return NO;   
 }
 
 #pragma mark NSTableViewDelegate

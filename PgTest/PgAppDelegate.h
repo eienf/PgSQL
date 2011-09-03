@@ -15,16 +15,18 @@
     NSPopUpButton *_tableSelect;
     NSPopUpButton *_relashonSelect;
     NSTableView *_tableView;
-    NSArray *tableList_;
+    NSMutableArray *tableList_;
 }
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSPopUpButton *tableSelect;
 @property (assign) IBOutlet NSPopUpButton *relashonSelect;
 @property (assign) IBOutlet NSTableView *tableView;
-@property (nonatomic,retain,readwrite) NSArray *tableList;
+@property (nonatomic,retain,readwrite) NSMutableArray *tableList;
 
 - (IBAction)updateAction:(id)sender;
 - (IBAction)tableDidChanged:(id)sender;
 - (IBAction)relashonDidChanged:(id)sender;
+- (IBAction)insertAction:(id)sender;
+- (IBAction)deleteAction:(id)sender;
 
 @end

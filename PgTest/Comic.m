@@ -23,7 +23,6 @@
     if (self) {
         self.tableName = @"comic";
         self.pkeyName = @"comic_id";
-        self.pkeySequenceName = @"comic_id_seq";
     }
     return self;
 }
@@ -85,14 +84,14 @@
     [self setInt32:authorId forColumnName:@"author_id"];
 }
 
-- (NSString*)name
+- (NSString*)title
 {
-    return [self varcharForColumnName:@"name"];
+    return [self varcharForColumnName:@"title"];
 }
 
-- (void)setName:(NSString *)name
+- (void)setTitle:(NSString *)title
 {
-    [self setVarchar:name forColumnName:@"name"];
+    [self setVarchar:title forColumnName:@"title"];
 }
 
 + (NSArray*)relationshipNames
@@ -102,9 +101,9 @@
 
 - (void)setObject:(id)object forColumnName:(NSString *)columnName
 {
-    if ( [columnName isEqualToString:@"name"] ) {
+    if ( [columnName isEqualToString:@"title"] ) {
         if ( [object isKindOfClass:[NSString class]] ) {
-            [self setName:object];
+            [self setTitle:object];
         }
     } else if ( [columnName isEqualToString:@"author_id"] ) {
         if ( [object isKindOfClass:[NSString class]] ||
@@ -121,5 +120,14 @@
     }
 }
 
++ (Comic*)comicWithTitle:(NSString*)aName authorId:(NSInteger)authorId andId:(NSInteger)anId
+{
+    Comic *newObject = [[Comic alloc] init];
+    [newObject setComicId:anId];
+    [newObject setAuthorId:authorId];
+    [newObject setTitle:aName];
+    newObject.oldValues = nil;
+    return [newObject autorelease];
+}
 
 @end
