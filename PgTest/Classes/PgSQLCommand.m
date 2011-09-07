@@ -59,7 +59,7 @@
 		PQclear(res);
         return nil;
 	}
-	printf("EXECUTE SUCCESS!!\n");
+//	printf("EXECUTE SUCCESS!!\n");
     return [PgSQLResult resultWithResult:res];
 }
 
@@ -67,7 +67,7 @@
 {
     PGresult *res;
     int nNumParams = [anArray count];
-    NSLog(@"%@",aFormat);
+//    NSLog(@"%@",aFormat);
     if ( nNumParams == 0 ) {
         res = PQexecParams([conn conn],
                            [aFormat UTF8String],
@@ -132,7 +132,7 @@
     for ( int i = 0; i < nNumParams; i++ ) {
         paramValues[i] = [[anArray objectAtIndex:i] cStringWithMalloc];
     }
-	printf("(%s)\n",sql);
+//	printf("(%s)\n",sql);
 	PGresult *res = PQexecParams([conn conn],
                                  sql,
                                  nNumParams, // int nNumParams,

@@ -48,6 +48,22 @@
     return [oldValues_ count] > 0;
 }
 
+- (BOOL)isEqualTo:(id)object
+{
+    if ( [self isTemp] || [object isTemp] ) return NO;
+    NSNumber *myPK = [self primaryKey];
+    NSNumber *hisPK = [object primaryKey];
+    return [myPK isEqualToNumber:hisPK];
+}
+
+- (NSNumber*)primaryKey
+{
+    if ( [self.pkeyName length] == 0 ) return nil;
+    PgSQLValue *aValue = [self valueforColumnName:self.pkeyName];
+    if ( aValue == nil || [aValue isNullValue] ) return nil;
+    return [NSNumber numberWithLongLong:[aValue longLongValue]];
+}
+
 - (PgSQLValue*)pkeyValue
 {
     return [self valueforColumnName:pkeyName_];
@@ -55,18 +71,36 @@
 
 #pragma mark Accessor
 
+- (NSInteger)guessType:(id)object
+{
+    if ( [object isKindOfClass:[NSString class]] )
+    {
+        return VARCHAROID;
+    }
+    if ( [object isKindOfClass:[NSNumber class]] )
+    {
+        return INT4OID;
+    }
+    if ( [object isKindOfClass:[NSDate class]] )
+    {
+        return TIMESTAMPTZOID;
+    }
+    return -1;
+}
+
 - (void)setObject:(id)object forColumnName:(NSString*)columnName
 {
     PgSQLValue *aValue = [attributes_ objectForKey:columnName];
     NSInteger type;
     if ( aValue == nil ) {
+        if ( (type = [self guessType:object]) < 0 ) return;        
         aValue = [PgSQLValue valueWithObject:object type:type];
     } else {
         type = aValue.type;
         [aValue setObject:object type:type];
     }
     if ( [oldValues_ count] == 0 ) {
-        oldValues_ = [attributes_ copy];
+        oldValues_ = [[attributes_ copy] autorelease];
     }
     [attributes_ setObject:aValue forKey:columnName];
 }
@@ -84,7 +118,7 @@
         aValue = [[[PgSQLValue alloc] init] autorelease];
     }
     if ( [oldValues_ count] == 0 ) {
-        oldValues_ = [attributes_ copy];
+        oldValues_ = [[attributes_ copy] autorelease];
     }
     [attributes_ setObject:aValue forKey:columnName];
     return aValue;
@@ -98,7 +132,7 @@
 - (void)setValue:(PgSQLValue*)value forColumnName:(NSString*)columnName
 {
     if ( [oldValues_ count] == 0 ) {
-        oldValues_ = [attributes_ copy];
+        oldValues_ = [[attributes_ copy] autorelease];
     }
     [attributes_ setObject:value forKey:columnName];
 }
@@ -351,7 +385,7 @@
 
 - (void)revertChanges
 {
-    self.attributes = [self.oldValues mutableCopy];
+    self.attributes = [[self.oldValues mutableCopy] autorelease];
     self.oldValues = nil;
 }
 

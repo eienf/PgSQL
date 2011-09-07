@@ -69,12 +69,12 @@ hasNoselect:(BOOL)noselect;
         [self preparePopup:_relashonSelect
                    forList:[Author relationshipNames] 
                hasNoselect:YES];
-        self.tableList = [[Author loadAllObjects] mutableCopy];
+        self.tableList = [[[Author loadAllObjects] mutableCopy] autorelease];
     } else if ( [aString isEqualToString:@"Comic"] ) {
         [self preparePopup:_relashonSelect
                    forList:[Comic relationshipNames] 
                hasNoselect:YES];
-        self.tableList = [[Comic loadAllObjects] mutableCopy];
+        self.tableList = [[[Comic loadAllObjects] mutableCopy] autorelease];
     }
     [_relashonSelect setEnabled:YES];
     [self makeTableColumns];
@@ -123,7 +123,7 @@ hasNoselect:(BOOL)noselect;
 
 - (IBAction)insertAction:(id)sender {
     __block NSInteger anId = 0;
-    PgSQLRecord *aRecord;
+    PgSQLRecord *aRecord = nil;
     NSString *aString = [[_tableSelect selectedItem] title];
     if ( [aString isEqualToString:@"Author"] ) {
         [tableList_ enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -136,7 +136,9 @@ hasNoselect:(BOOL)noselect;
         }];
         aRecord = [Comic comicWithTitle:@"" authorId:0 andId:anId+1];
     }
-    [self insertRecord:aRecord];
+    if ( aRecord ) {
+        [self insertRecord:aRecord];
+    }
 }
 
 - (IBAction)deleteAction:(id)sender {
@@ -240,6 +242,7 @@ hasNoselect:(BOOL)noselect;
         NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:aKey];
         [[tableColumn headerCell] setStringValue:aKey];
         [_tableView addTableColumn:tableColumn];
+        [tableColumn release];
     }
 }
 

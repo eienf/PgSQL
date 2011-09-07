@@ -10,13 +10,9 @@
 #import "TestDB.h"
 #import "PgSQLQuery.h"
 
-@interface Comic ()
-@property(nonatomic,assign,readwrite) Author *author_;
-@end
-
 @implementation Comic
 
-@synthesize author_;
+@synthesize tmpAuthor = tmpAuthor_;
 
 - (id)init {
     self = [super init];
@@ -28,7 +24,7 @@
 }
 
 - (void)dealloc {
-    self.author_ = nil;
+    self.tmpAuthor = nil;
     [super dealloc];
 }
 
@@ -42,6 +38,10 @@
     return [aQuery queryRecords];
 }
 
+- (NSNumber*)primaryKey
+{
+    return [NSNumber numberWithLongLong:[self comicId]];
+}
 
 - (NSInteger)comicId
 {
@@ -55,22 +55,22 @@
 
 - (Author*)author
 {
-    if ( author_ == nil ) {
-        self.author = (Author*)[self toOneRelationship:@"author"
+    if ( tmpAuthor_ == nil ) {
+        self.tmpAuthor = (Author*)[self toOneRelationship:@"author"
                                      withPkey:@"author_id"
                                      forClass:[Author class]
                                       forFkey:@"author_id"
                                         connection:[[TestDB testDB] connection]];
     }
-    return author_;
+    return self.tmpAuthor;
 }
 
 - (void)setAuthor:(Author *)author
 {
-    if ( author_ ) {
-        [author_ removeObjectFromToComics:self];
+    if ( tmpAuthor_ && ![tmpAuthor_ isEqualTo:author]) {
+        [tmpAuthor_ removeObjectFromToComics:self];
     }
-    self.author_ = author;
+    self.tmpAuthor = author;
     [author addObjectToComics:self];
 }
 

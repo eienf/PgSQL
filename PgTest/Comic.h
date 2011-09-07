@@ -11,12 +11,13 @@
 
 @interface Comic : PgSQLRecord
 {
-    Author *author_;
+    Author *tmpAuthor_;
 }
 @property(nonatomic,assign,readwrite) NSInteger comicId;
 @property(nonatomic,assign,readwrite) NSInteger authorId;
 @property(nonatomic,assign,readwrite) NSString *title;
-@property(nonatomic,assign,readwrite) Author *author;
+@property(nonatomic,retain,readwrite) Author *author;
+@property(nonatomic,retain,readwrite) Author *tmpAuthor;
 
 + (NSArray*)loadAllObjects;
 + (NSArray*)relationshipNames;

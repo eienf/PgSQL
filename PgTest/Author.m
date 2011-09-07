@@ -11,13 +11,9 @@
 #import "TestDB.h"
 #import "PgSQLQuery.h"
 
-@interface Author ()
-@property(nonatomic,retain,readwrite) NSMutableArray *toComics_;
-@end
-
 @implementation Author
 
-@synthesize toComics_;
+@synthesize toComics = toComics_;
 
 - (id)init {
     self = [super init];
@@ -29,7 +25,7 @@
 }
 
 - (void)dealloc {
-    self.toComics_ = nil;
+    self.toComics = nil;
     [super dealloc];
 }
 
@@ -43,16 +39,20 @@
     return [aQuery queryRecords];
 }
 
+- (NSNumber*)primaryKey
+{
+    return [NSNumber numberWithLongLong:[self authorId]];
+}
 
 - (NSArray*)toComics
 {
     if ( toComics_ == nil ) {
-        self.toComics_ = [[self toManyRelationships:@"comic"
+        self.toComics = [[[self toManyRelationships:@"comic"
                                          withFkey:@"author_id"
                                          forClass:[Comic class]
                                           forPkey:@"author_id"
                                        connection:[[TestDB testDB] connection]
-                           ] mutableCopy];
+                           ] mutableCopy] autorelease];
     }
     return toComics_;
 }
@@ -60,13 +60,13 @@
 - (void)addObjectToComics:(Comic*)anObject
 {
     anObject.authorId = self.authorId;
-    [self.toComics_ addObject:anObject];
+    [self.toComics addObject:anObject];
 }
 
 - (void)removeObjectFromToComics:(Comic*)anObject
 {
     anObject.authorId = 0;
-    [self.toComics_ removeObject:anObject];
+    [self.toComics removeObject:anObject];
 }
 
 - (NSInteger)authorId

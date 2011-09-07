@@ -252,13 +252,13 @@
 
 - (void)setString:(NSString*)aString
 {
-    self.value = [aString copy];
+    self.value = [[aString copy] autorelease];
     self.type = VARCHAROID;
 }
 
 - (void)setText:(NSString*)aString
 {
-    self.value = [aString copy];
+    self.value = [[aString copy] autorelease];
     self.type = TEXTOID;
 }
 

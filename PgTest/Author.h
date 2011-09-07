@@ -16,7 +16,7 @@
 }
 @property(nonatomic,assign,readwrite) NSInteger authorId;
 @property(nonatomic,assign,readwrite) NSString *name;
-@property(nonatomic,assign,readonly) NSArray *toComics;
+@property(nonatomic,retain,readwrite) NSMutableArray *toComics;
 
 - (void)addObjectToComics:(Comic*)anObject;
 - (void)removeObjectFromToComics:(Comic*)anObject;

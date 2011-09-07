@@ -27,6 +27,9 @@
 @property(nonatomic,assign,readonly) BOOL isTemp;
 @property(nonatomic,retain,readonly) PgSQLValue *pkeyValue;
 
+- (BOOL)isEqualTo:(id)object;
+- (NSNumber*)primaryKey;
+
 - (void)setObject:(id)object forColumnName:(NSString*)columnName;
 - (id)objectForColumnName:(NSString*)columnName;
 - (void)setBOOL:(BOOL)val forColumnName:(NSString*)columnName;
