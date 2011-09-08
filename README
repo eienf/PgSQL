@@ -14,6 +14,7 @@ Timezone Japanese Standard Time.
 Binary long long integer packet.
 Big Endian Host byte order.
 assume every tabel has one integer(32/64) primary key.
+Use to build Xcode4.2, LLVM-gcc, project setting is 32bit.
 
 I don't care thread safety by now.
 
