@@ -20,8 +20,10 @@ I don't care thread safety by now.
 
 and there are lots of limitations.
 
-You can use it under GPL2.
+You can use it under LGPL.
 please report bug, and welcome any suggestion to improve my codes.
+
+"(c) 2011 Eien Factory, eien.support@gmail.com All rights reserved."
 
     
 This contains very basic functions in some classes.
