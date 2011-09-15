@@ -100,7 +100,7 @@
         [aValue setObject:object type:type];
     }
     if ( [oldValues_ count] == 0 ) {
-        oldValues_ = [[attributes_ copy] autorelease];
+        self.oldValues = [[attributes_ copy] autorelease];
     }
     [attributes_ setObject:aValue forKey:columnName];
 }
@@ -118,7 +118,7 @@
         aValue = [[[PgSQLValue alloc] init] autorelease];
     }
     if ( [oldValues_ count] == 0 ) {
-        oldValues_ = [[attributes_ copy] autorelease];
+        self.oldValues = [[attributes_ copy] autorelease];
     }
     [attributes_ setObject:aValue forKey:columnName];
     return aValue;
@@ -132,7 +132,7 @@
 - (void)setValue:(PgSQLValue*)value forColumnName:(NSString*)columnName
 {
     if ( [oldValues_ count] == 0 ) {
-        oldValues_ = [[attributes_ copy] autorelease];
+        self.oldValues = [[attributes_ copy] autorelease];
     }
     [attributes_ setObject:value forKey:columnName];
 }
