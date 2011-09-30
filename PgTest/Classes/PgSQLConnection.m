@@ -26,6 +26,7 @@
 
 - (void)connect
 {
+	if ( [self isConnected] ) return;
     char hostname[BUFF_SIZE];
     char port[BUFF_SIZE];
     char dbname[BUFF_SIZE];
@@ -54,6 +55,7 @@
 {
     if ( [self connectionStatus] == CONNECTION_OK ) {
         PQfinish(conn_);
+		conn_ = NULL;
     }
 }
 
@@ -75,7 +77,7 @@
 
 - (NSString*)connectionMessage
 {
-    if ( conn_ ) return nil;
+    if ( conn_ == NULL ) return nil;
     char *message = PQerrorMessage(conn_);
     return [NSString stringWithCString:message encoding:NSASCIIStringEncoding];
 }
@@ -85,6 +87,5 @@
     if ( conn_ == NULL ) return CONNECTION_BAD;
     return PQtransactionStatus(conn_);
 }
-
 
 @end

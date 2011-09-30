@@ -422,7 +422,7 @@ static NSInteger secondsFromGMT_ = 32400;
     NSTimeInterval timei = [invalue timeIntervalSince1970];
     st = timei - (946684800);// time_t:1970-, pg:2000- JST
     st *= 1000000LL;
-    printf("%s %lld\n",__func__,st);
+//    printf("%s %lld\n",__func__,st);
     return [self encodeInt64:st intoBuffer:outval maxSize:maxSize];
 }
 

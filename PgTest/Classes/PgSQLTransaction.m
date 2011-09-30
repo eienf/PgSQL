@@ -52,8 +52,8 @@
 - (BOOL)run
 {
     if ( [self.commands count] == 0 ) return NO;
-    if ( [self beginTransaction] ) return NO;
-    if ( [self execute] ) {
+    if ( ![self beginTransaction] ) return NO;
+    if ( ![self execute] ) {
         [self rollback];
         return NO;
     }
