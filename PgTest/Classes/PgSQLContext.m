@@ -7,11 +7,16 @@
 //
 
 #import "PgSQLContext.h"
+#import "PgSQLTransaction.h"
+#import "PgSQLInsert.h"
+#import "PgSQLUpdate.h"
+#import "PgSQLDelete.h"
 
 @implementation PgSQLContext
 
 @synthesize allObjects;
 @synthesize deletedObjects;
+@synthesize connection;
 
 - (id)init
 {
@@ -27,6 +32,7 @@
 
 - (void)dealloc
 {
+	self.connection = nil;
 	self.allObjects = nil;
 	self.deletedObjects = nil;
 	[insertedSet release];
@@ -44,7 +50,17 @@
 
 - (BOOL)saveChanges
 {
-	return NO;
+	NSArray *insertCommands = [PgSQLInsert insertCommandsFrom:[self insertedObjects]
+												  connection:connection];
+	NSArray *updatedCommands = [PgSQLUpdate updateCommandsFrom:[self updatedObjects]
+												  connection:connection];
+	NSArray *deletedCommands = [PgSQLDelete deleteCommandsFrom:[self deletedObjects]
+												  connection:connection];
+	PgSQLTransaction *aTransaction = [PgSQLTransaction transactionWith:insertCommands
+															connection:connection];
+	[aTransaction appendCommands:updatedCommands];
+	[aTransaction appendCommands:deletedCommands];
+	return [aTransaction run];
 }
 
 - (NSArray*)insertedObjects
@@ -83,7 +99,11 @@
 - (void)addUpdatedObjects:(NSArray*)anArray
 {
 	NSIndexSet *indexSet = [self addNotCountainedObjects:anArray];
-	[updatedSet addIndexes:indexSet];
+	[indexSet enumerateIndexesUsingBlock:^(NSUInteger idx,BOOL *stop){
+		if ( ![insertedSet containsIndex:idx] ) {
+			[updatedSet addIndex:idx];
+		}
+	}];
 }
 
 - (void)addInsertedObjects:(NSArray*)anArray
@@ -131,7 +151,9 @@
 - (void)addUpdatedObject:(PgSQLRecord*)anObject
 {
 	NSUInteger index = [self addNotCountainedObject:anObject];
-	[updatedSet addIndex:index];
+	if ( ![insertedSet containsIndex:index] ) {
+		[updatedSet addIndex:index];
+	}
 }
 
 - (void)addInsertedObject:(PgSQLRecord*)anObject

@@ -7,14 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PgSQLConnection.h"
 #import "PgSQLRecord.h"
 
 @interface PgSQLContext : NSObject {
+	PgSQLConnection *connection;
 	NSMutableArray *allObjects;
 	NSMutableArray *deletedObjects;
 	NSMutableIndexSet *insertedSet;
 	NSMutableIndexSet *updatedSet;
 }
+@property(nonatomic,retain,readwrite) PgSQLConnection *connection;
 @property(nonatomic,retain,readwrite) NSMutableArray *allObjects;
 @property(nonatomic,retain,readwrite) NSMutableArray *deletedObjects;
 @property(nonatomic,retain,readonly) NSArray *insertedObjects;
