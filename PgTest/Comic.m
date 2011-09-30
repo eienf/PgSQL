@@ -43,12 +43,12 @@
     return [NSNumber numberWithLongLong:[self comicId]];
 }
 
-- (NSInteger)comicId
+- (int)comicId
 {
     return [self int32ForColumnName:@"comic_id"];
 }
 
-- (void)setComicId:(NSInteger)value
+- (void)setComicId:(int)value
 {
     [self setInt32:value forColumnName:@"comic_id"];
 }
@@ -74,12 +74,12 @@
     [author addObjectToComics:self];
 }
 
-- (NSInteger)authorId
+- (int)authorId
 {
     return [self int32ForColumnName:@"author_id"];
 }
 
-- (void)setAuthorId:(NSInteger)authorId
+- (void)setAuthorId:(int)authorId
 {
     [self setInt32:authorId forColumnName:@"author_id"];
 }
@@ -108,19 +108,19 @@
     } else if ( [columnName isEqualToString:@"author_id"] ) {
         if ( [object isKindOfClass:[NSString class]] ||
             [object isKindOfClass:[NSNumber class]] ) {
-            NSInteger val = [object integerValue];
+            int val = (int)[object integerValue];
             [self setAuthorId:val];
         }
     } else if ( [columnName isEqualToString:@"comic_id"] ) {
         if ( [object isKindOfClass:[NSString class]] ||
             [object isKindOfClass:[NSNumber class]] ) {
-            NSInteger val = [object integerValue];
+            int val = (int)[object integerValue];
             [self setComicId:val];
         }
     }
 }
 
-+ (Comic*)comicWithTitle:(NSString*)aName authorId:(NSInteger)authorId andId:(NSInteger)anId
++ (Comic*)comicWithTitle:(NSString*)aName authorId:(int32_t)authorId andId:(int32_t)anId
 {
     Comic *newObject = [[Comic alloc] init];
     [newObject setComicId:anId];

@@ -122,7 +122,7 @@ hasNoselect:(BOOL)noselect;
 }
 
 - (IBAction)insertAction:(id)sender {
-    __block NSInteger anId = 0;
+    __block int32_t anId = 0;
     PgSQLRecord *aRecord = nil;
     NSString *aString = [[_tableSelect selectedItem] title];
     if ( [aString isEqualToString:@"Author"] ) {

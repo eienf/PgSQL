@@ -71,7 +71,7 @@
 
 #pragma mark Accessor
 
-- (NSInteger)guessType:(id)object
+- (Oid)guessType:(id)object
 {
     if ( [object isKindOfClass:[NSString class]] )
     {
@@ -91,7 +91,7 @@
 - (void)setObject:(id)object forColumnName:(NSString*)columnName
 {
     PgSQLValue *aValue = [attributes_ objectForKey:columnName];
-    NSInteger type;
+    Oid type;
     if ( aValue == nil ) {
         if ( (type = [self guessType:object]) < 0 ) return;        
         aValue = [PgSQLValue valueWithObject:object type:type];
@@ -100,7 +100,7 @@
         [aValue setObject:object type:type];
     }
     if ( [oldValues_ count] == 0 ) {
-        oldValues_ = [[attributes_ copy] autorelease];
+        self.oldValues = [[attributes_ copy] autorelease];
     }
     [attributes_ setObject:aValue forKey:columnName];
 }
@@ -118,7 +118,7 @@
         aValue = [[[PgSQLValue alloc] init] autorelease];
     }
     if ( [oldValues_ count] == 0 ) {
-        oldValues_ = [[attributes_ copy] autorelease];
+        self.oldValues = [[attributes_ copy] autorelease];
     }
     [attributes_ setObject:aValue forKey:columnName];
     return aValue;

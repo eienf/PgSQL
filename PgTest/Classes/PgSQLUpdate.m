@@ -62,7 +62,7 @@
     NSString *whereStatement = [NSString stringWithFormat:@"%@ = $%d",record_.pkeyName,[keys count]];
     sql = [NSString stringWithFormat:@"UPDATE %@ SET ( %@ ) = ( %@ ) WHERE %@;",
            record_.tableName, keyList, paramList, whereStatement ];
-    NSLog(@"%@",sql);
+//    NSLog(@"%@",sql);
     PgSQLResult *aResult = [PgSQLCommand executeBinaryFormat:sql params:params_ connection:conn_];
     if ( [aResult isOK] ) {
         [record_ didSaveChanges];

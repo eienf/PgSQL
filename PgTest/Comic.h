@@ -13,15 +13,15 @@
 {
     Author *tmpAuthor_;
 }
-@property(nonatomic,assign,readwrite) NSInteger comicId;
-@property(nonatomic,assign,readwrite) NSInteger authorId;
+@property(nonatomic,assign,readwrite) int comicId;
+@property(nonatomic,assign,readwrite) int authorId;
 @property(nonatomic,assign,readwrite) NSString *title;
 @property(nonatomic,retain,readwrite) Author *author;
 @property(nonatomic,retain,readwrite) Author *tmpAuthor;
 
 + (NSArray*)loadAllObjects;
 + (NSArray*)relationshipNames;
-+ (Comic*)comicWithTitle:(NSString*)aName authorId:(NSInteger)authorId andId:(NSInteger)anId;
++ (Comic*)comicWithTitle:(NSString*)aName authorId:(int32_t)authorId andId:(int32_t)anId;
 
 
 @end

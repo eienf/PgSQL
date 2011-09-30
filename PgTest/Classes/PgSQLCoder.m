@@ -149,7 +149,7 @@ static NSInteger secondsFromGMT_ = 32400;
             break;
         case INT4OID:
         {
-            int32_t val = [value longValue];
+            int32_t val = [value intValue];
             [self encodeInt32:val intoBuffer:buff maxSize:maxSize];
             return buff;
         }

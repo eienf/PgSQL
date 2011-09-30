@@ -66,7 +66,7 @@
 + (PgSQLResult*)executeBinaryFormat:(NSString*)aFormat params:(NSArray*)anArray connection:(PgSQLConnection*)conn
 {
     PGresult *res;
-    int nNumParams = [anArray count];
+    int nNumParams = (int)[anArray count];
 //    NSLog(@"%@",aFormat);
     if ( nNumParams == 0 ) {
         res = PQexecParams([conn conn],
@@ -88,7 +88,7 @@
             paramValues[i] = malloc(size);
             [(PgSQLValue*)[anArray objectAtIndex:i] getBinary:paramValues[i] maxSize:size];
             paramTypes[i] = [(PgSQLValue*)[anArray objectAtIndex:i] type];
-            paramLengths[i] = [(PgSQLValue*)[anArray objectAtIndex:i] getBufferSize];
+            paramLengths[i] = (int)[(PgSQLValue*)[anArray objectAtIndex:i] getBufferSize];
             switch ( [(PgSQLValue*)[anArray objectAtIndex:i] type] ) {
                 case VARCHAROID: case TEXTOID:
                     paramLengths[i]--; // string length
@@ -123,7 +123,7 @@
 
 + (PgSQLResult*)executeTextFormat:(NSString*)aFormat params:(NSArray*)anArray connection:(PgSQLConnection*)conn
 {
-    int nNumParams = [anArray count];
+    int nNumParams = (int)[anArray count];
     if ( nNumParams == 0 ) {
         return [PgSQLCommand executeString:aFormat connection:conn];
     }

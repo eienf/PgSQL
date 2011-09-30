@@ -14,7 +14,7 @@
 {
     NSMutableArray *toComics_;
 }
-@property(nonatomic,assign,readwrite) NSInteger authorId;
+@property(nonatomic,assign,readwrite) int authorId;
 @property(nonatomic,assign,readwrite) NSString *name;
 @property(nonatomic,retain,readwrite) NSMutableArray *toComics;
 
@@ -22,6 +22,6 @@
 - (void)removeObjectFromToComics:(Comic*)anObject;
 + (NSArray*)loadAllObjects;
 + (NSArray*)relationshipNames;
-+ (Author*)authorWithName:(NSString*)aName andId:(NSInteger)anId;
++ (Author*)authorWithName:(NSString*)aName andId:(int32_t)anId;
    
 @end

@@ -570,7 +570,7 @@
 		7B5E2B2D13FD44B0007D9F5B /* sqlda-compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "sqlda-compat.h"; sourceTree = "<group>"; };
 		7B5E2B2E13FD44B0007D9F5B /* sqlda-native.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "sqlda-native.h"; sourceTree = "<group>"; };
 		7B5E2B2F13FD44B0007D9F5B /* sqlda.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlda.h; sourceTree = "<group>"; };
-		7B5E2B3013FD44CC007D9F5B /* libpq.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpq.a; path = ../../../../../Library/PostgreSQL/9.0/lib/libpq.a; sourceTree = "<group>"; };
+		7B5E2B3013FD44CC007D9F5B /* libpq.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpq.a; path = /Library/PostgreSQL/9.1/lib/libpq.a; sourceTree = "<absolute>"; };
 		7BACACD71408FF4800AE8C10 /* PgSQLValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLValue.h; path = PgTest/Classes/PgSQLValue.h; sourceTree = "<group>"; };
 		7BACACD81408FF4900AE8C10 /* PgSQLValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PgSQLValue.m; path = PgTest/Classes/PgSQLValue.m; sourceTree = "<group>"; };
 		7BACACDB1408FFB200AE8C10 /* PgSQLCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQLCoder.h; path = PgTest/Classes/PgSQLCoder.h; sourceTree = "<group>"; };
@@ -768,8 +768,8 @@
 				7B5E2B2F13FD44B0007D9F5B /* sqlda.h */,
 			);
 			name = include;
-			path = ../../../../../Library/PostgreSQL/9.0/include;
-			sourceTree = "<group>";
+			path = /Library/PostgreSQL/9.1/include;
+			sourceTree = "<absolute>";
 		};
 		7B5E291D13FD44AF007D9F5B /* libpq */ = {
 			isa = PBXGroup;
@@ -1776,7 +1776,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1787,14 +1787,14 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = "";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
@@ -1802,18 +1802,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_VERSION = "";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = macosx;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};
@@ -1825,7 +1826,7 @@
 				INFOPLIST_FILE = "PgTest/PgTest-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(LOCAL_LIBRARY_DIR)/PostgreSQL/9.0/lib\"",
+					"\"$(LOCAL_LIBRARY_DIR)/PostgreSQL/9.1/lib\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -1840,7 +1841,7 @@
 				INFOPLIST_FILE = "PgTest/PgTest-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(LOCAL_LIBRARY_DIR)/PostgreSQL/9.0/lib\"",
+					"\"$(LOCAL_LIBRARY_DIR)/PostgreSQL/9.1/lib\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -1857,7 +1858,7 @@
 				INFOPLIST_FILE = "PgTestTests/PgTestTests-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(LOCAL_LIBRARY_DIR)/PostgreSQL/9.0/lib\"",
+					"\"$(LOCAL_LIBRARY_DIR)/PostgreSQL/9.1/lib\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -1875,7 +1876,7 @@
 				INFOPLIST_FILE = "PgTestTests/PgTestTests-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(LOCAL_LIBRARY_DIR)/PostgreSQL/9.0/lib\"",
+					"\"$(LOCAL_LIBRARY_DIR)/PostgreSQL/9.1/lib\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";

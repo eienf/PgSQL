@@ -153,7 +153,7 @@
                                      params:nil
                                  connection:con];
     if ( res != nil ) {
-        STAssertTrue([res numOfTuples]==4,@"numOfTuples");
+        STAssertTrue([res numOfTuples]==1,@"numOfTuples");
         STAssertTrue([res numOfFields]==13,@"numOfFields");
         [res printResult];
         [res clear];
@@ -453,6 +453,7 @@
         STAssertFalse(YES, @"connection failed");
     }
 FINISH:
+	[con disconnect];
     [con release];
 }
 
@@ -475,7 +476,7 @@ FINISH:
         PgSQLRecord *aRecord;
         PgSQLRecord *bRecord;
         int32_t version;
-        int lastid;
+        int lastid = 0;
         NSArray *anArray;
         NSArray *insertList;
         NSMutableArray *recordArray;
@@ -532,8 +533,8 @@ FINISH:
         where = [NSString stringWithFormat:@"id > %d",lastid];
         aQuery = [PgSQLQuery queryWithTable:@"basic" where:where forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        NSLog(@"after updated [%d]",[anArray count]);
-        STAssertEquals([anArray count], (NSUInteger)2, @"after updated count");
+        NSLog(@"after inserted [%d]",[anArray count]);
+        STAssertEquals([anArray count], (NSUInteger)2, @"after inserted count");
         NSLog(@"    %@",anArray);
         flag = [aTransaction commitEditing];
         STAssertTrue(flag, @"commit transaction");
@@ -548,7 +549,7 @@ FINISH:
         anUpdate = [PgSQLUpdate updateCommandWith:aRecord connection:con];
         aResult = [anUpdate execute];
         STAssertNotNil(aResult,@"res must be allocated.");
-        STAssertTrue([aResult isOK], @"after updated count");
+        STAssertTrue([aResult isOK], @"update result");
         STAssertEquals([aRecord int32ForColumnName:@"version"], version, @"Version should equal");
         NSLog(@"    %@",aRecord);
 
@@ -567,6 +568,7 @@ FINISH:
         STAssertFalse(YES, @"connection failed");
     }
 FINISH:
+	[con disconnect];
     [con release];
 }
 

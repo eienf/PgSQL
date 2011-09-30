@@ -69,12 +69,12 @@
     [self.toComics removeObject:anObject];
 }
 
-- (NSInteger)authorId
+- (int)authorId
 {
     return [self int32ForColumnName:@"author_id"];
 }
 
-- (void)setAuthorId:(NSInteger)authorId
+- (void)setAuthorId:(int)authorId
 {
     [self setInt32:authorId forColumnName:@"author_id"];
 }
@@ -103,13 +103,13 @@
     } else if ( [columnName isEqualToString:@"author_id"] ) {
         if ( [object isKindOfClass:[NSString class]] ||
             [object isKindOfClass:[NSNumber class]] ) {
-            NSInteger val = [object integerValue];
+            int val = (int)[object integerValue];
             [self setAuthorId:val];
         }
     }
 }
 
-+ (Author*)authorWithName:(NSString*)aName andId:(NSInteger)anId
++ (Author*)authorWithName:(NSString*)aName andId:(int32_t)anId
 {
     Author *newObject = [[Author alloc] init];
     [newObject setAuthorId:anId];
