@@ -332,9 +332,11 @@
                        connection:(PgSQLConnection*)con
 {
     NSString *whereString = [NSString stringWithFormat:@"%@ = $1",pkeyName];
+	id param = [self valueforColumnName:pkeyName];
+	if ( param == nil ) return nil;
     PgSQLQuery *aQuery = [PgSQLQuery queryWithTable:tableName
                                               where:whereString
-                                             params:[NSArray arrayWithObject:[self valueforColumnName:fkeyName]]
+                                             params:[NSArray arrayWithObject:param]
                                            forClass:recordClass
                                             orderBy:nil
                                          connection:con];
@@ -344,15 +346,17 @@
 }
 
 - (NSArray*)toManyRelationships:(NSString*)tableName 
-                       withFkey:(NSString*)pkeyName 
+                       withFkey:(NSString*)fkeyName 
                        forClass:(Class)recordClass 
-                        forPkey:(NSString*)fkeyName
+                        forPkey:(NSString*)pkeyName
                      connection:(PgSQLConnection*)con
 {
     NSString *whereString = [NSString stringWithFormat:@"%@ = $1",fkeyName];
+	id param = [self valueforColumnName:pkeyName];
+	if ( param == nil ) return [NSArray array];
     PgSQLQuery *aQuery = [PgSQLQuery queryWithTable:tableName
                                               where:whereString
-                                             params:[NSArray arrayWithObject:[self valueforColumnName:pkeyName]]
+                                             params:[NSArray arrayWithObject:param]
                                            forClass:recordClass
                                             orderBy:nil
                                          connection:con];
