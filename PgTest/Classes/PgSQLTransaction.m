@@ -98,6 +98,4 @@
     [aResult clear];
 }
 
-
-
 @end

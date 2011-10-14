@@ -40,12 +40,18 @@
     NSString *sql;
     NSMutableArray *keys;
     NSArray *values;
+	NSDictionary *attr;
     if ( ![self isBinary] ) return nil;
     if ( record_.tableName == nil ) return nil;
     if ( record_.pkeyName == nil ) return nil;
     if ( [record_.attributes count] == 0 ) return nil;
-    keys = [NSMutableArray arrayWithCapacity:[record_.attributes count]];
-    [[record_.attributes allKeys] enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){
+	if ( [record_.oldValues count] != 0 ) {
+		attr = record_.oldValues;
+	} else {
+		attr = record_.attributes;
+	}
+    keys = [NSMutableArray arrayWithCapacity:[attr count]];
+    [[attr allKeys] enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){
         if ( ![obj isEqualToString:record_.pkeyName] ) {
             [keys addObject:obj];
         }
