@@ -129,7 +129,10 @@
             }
             char *value = [result getValue:row column:col];
             int type = [result getType:col];
-            if ( isBinary ) {
+			if ( [result getIsNull:row column:col] ) {
+                PgSQLValue *aValue = [PgSQLValue nullValue];
+                [dict setObject:aValue forKey:[nameList objectAtIndex:col]];
+			} else if ( isBinary ) {
                 PgSQLValue *aValue = [PgSQLValue valueWithBinary:value type:type];
                 [dict setObject:aValue forKey:[nameList objectAtIndex:col]];
             } else {

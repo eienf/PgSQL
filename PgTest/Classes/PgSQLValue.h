@@ -38,6 +38,7 @@
 + (PgSQLValue*)valueWithBinary:(const char *)val type:(Oid)type;
 - (id)initWithObject:(id)val type:(Oid)type;
 + (PgSQLValue*)valueWithObject:(id)val type:(Oid)type;
++ (PgSQLValue*)nullValue;
 - (void)setObject:(id)val type:(Oid)type;
 - (size_t)getBinarySize;
 - (size_t)getBufferSize;

@@ -397,7 +397,7 @@ static NSInteger secondsFromGMT_ = 32400;
     NSTimeInterval timei = [invalue timeIntervalSince1970];
     st = (int32_t)timei - (946684800 - 32400);// time_t:1970-, pg:2000- JST
     st = st / (3600 * 24);// seconds -> days
-    printf("%s %d\n",__func__,st);
+//    printf("%s %d\n",__func__,st);
     return [self encodeInt32:st intoBuffer:outval maxSize:maxSize];
 }
 

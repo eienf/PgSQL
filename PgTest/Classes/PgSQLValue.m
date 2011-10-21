@@ -54,6 +54,14 @@
     return [aValue autorelease];
 }
 
++ (PgSQLValue*)nullValue
+{
+    PgSQLValue *aValue = [[PgSQLValue alloc] init];
+	aValue.value = nil;
+	aValue.type = 0;
+    return [aValue autorelease];
+}
+
 - (void)setObject:(id)val type:(Oid)type
 {
     if ( [val isKindOfClass:[NSNumber class]] ||

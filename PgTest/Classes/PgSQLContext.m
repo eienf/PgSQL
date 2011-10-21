@@ -60,7 +60,13 @@
 															connection:connection];
 	[aTransaction appendCommands:updatedCommands];
 	[aTransaction appendCommands:deletedCommands];
-	return [aTransaction run];
+	BOOL flag = [aTransaction run];
+	if ( flag ) {
+		self.deletedObjects = [NSMutableArray array];
+		[insertedSet removeAllIndexes];
+		[updatedSet removeAllIndexes];
+	}
+	return flag;
 }
 
 - (NSArray*)insertedObjects
