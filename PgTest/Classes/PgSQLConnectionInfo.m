@@ -19,6 +19,7 @@
 @synthesize dbname = dbname_;
 @synthesize username = username_;
 @synthesize password = password_;
+@synthesize isCrypted;
 
 - (void)dealloc
 {
@@ -55,6 +56,7 @@
     self.dbname = [aDict objectForKey:@"dbname"];
     self.username = [aDict objectForKey:@"username"];
     self.password = [aDict objectForKey:@"password"];
+    self.isCrypted = [[aDict objectForKey:@"isCrypted"] boolValue];
 }
 
 + (PgSQLConnectionInfo*)connectionInfoWithURL:(NSURL*)aUrl
