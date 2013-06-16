@@ -85,7 +85,7 @@
     {
         return TIMESTAMPTZOID;
     }
-    return -1;
+    return INVALID_OID;
 }
 
 - (void)setObject:(id)object forColumnName:(NSString*)columnName
@@ -93,7 +93,7 @@
     PgSQLValue *aValue = [attributes_ objectForKey:columnName];
     Oid type;
     if ( aValue == nil ) {
-        if ( (type = [self guessType:object]) < 0 ) return;        
+        if ( (type = [self guessType:object]) == INVALID_OID ) return;
         aValue = [PgSQLValue valueWithObject:object type:type];
     } else {
         type = aValue.type;

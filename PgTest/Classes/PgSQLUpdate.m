@@ -65,7 +65,7 @@
         [params addObject:[NSString stringWithFormat:@"$%d",i+1]];
     }
     NSString *paramList = [params componentsJoinedByString:@", "];
-    NSString *whereStatement = [NSString stringWithFormat:@"%@ = $%d",record_.pkeyName,[keys count]];
+    NSString *whereStatement = [NSString stringWithFormat:@"%@ = $%ld",record_.pkeyName,(NSUInteger)[keys count]];
     sql = [NSString stringWithFormat:@"UPDATE %@ SET ( %@ ) = ( %@ ) WHERE %@;",
            record_.tableName, keyList, paramList, whereStatement ];
 //    NSLog(@"%@",sql);

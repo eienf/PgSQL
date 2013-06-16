@@ -90,7 +90,7 @@
     NSMutableArray *anArray = [NSMutableArray arrayWithCapacity:[records_ count]];
     [records_ enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){
         [paramList addObject:aRecord.pkeyValue];
-        [anArray addObject:[NSString stringWithFormat:@"$%d",idx+1]];
+        [anArray addObject:[NSString stringWithFormat:@"$%ld",idx+1]];
     }];
     NSString *pkeyList = [anArray componentsJoinedByString:@" , "];
     NSString *sql;
