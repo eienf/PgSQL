@@ -64,9 +64,7 @@
     PgSQLResult *aResult = [PgSQLCommand executeBinaryFormat:sql params:params_ connection:conn_];
     char *val = [aResult getValue:0 column:0];
     int type = [aResult getType:0];
-    [record_ valueWillChangeForColumnName:record_.pkeyName];
     [record_ setBinary:val ofType:type forColumnName:record_.pkeyName];
-    [record_ valueDidChangeForColumnName:record_.pkeyName];
     return aResult;
 }
 

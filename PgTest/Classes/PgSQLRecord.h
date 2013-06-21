@@ -19,7 +19,7 @@
     NSString *pkeySequenceName_;
 }
 @property(nonatomic,retain,readwrite) NSMutableDictionary *attributes;// NSString
-@property(nonatomic,retain,readwrite) NSDictionary *oldValues;// PgSQLValue
+@property(nonatomic,copy,readwrite) NSDictionary *oldValues;// PgSQLValue
 @property(nonatomic,copy,readwrite) NSString *tableName;
 @property(nonatomic,copy,readwrite) NSString *pkeyName;
 @property(nonatomic,copy,readwrite) NSString *pkeySequenceName;
@@ -79,8 +79,8 @@
                         forPkey:(NSString*)fkeyName
                      connection:(PgSQLConnection*)con;
 
-- (void)valueWillChangeForColumnName:(NSString*)columnName;
-- (void)valueDidChangeForColumnName:(NSString*)columnName;
+- (void)value:(PgSQLValue*)oldValue willChangeForColumnName:(NSString*)columnName;
+- (void)value:(PgSQLValue*)newValue didChangeForColumnName:(NSString*)columnName;
 - (void)relatedValue:(PgSQLRecord*)aRecord willChangeForColumnName:(NSString*)columnName;
 - (void)relatedValue:(PgSQLRecord*)aRecord didChangeForColumnName:(NSString*)columnName;
 - (void)revertChanges;

@@ -39,7 +39,7 @@
 {
     NSString *sql;
     NSMutableArray *keys;
-    NSArray *values;
+    NSMutableArray *values;
 	NSDictionary *attr;
     if ( ![self isBinary] ) return nil;
     if ( record_.tableName == nil ) return nil;
@@ -58,7 +58,8 @@
     }];
     NSString *keyList = [keys componentsJoinedByString:@", "];
     [keys addObject:record_.pkeyName];
-    values = [record_.attributes objectsForKeys:keys notFoundMarker:[NSNull null]];
+    values = [[record_.attributes objectsForKeys:keys notFoundMarker:[NSNull null]] mutableCopy];
+    [values addObject:record_.pkeyValue];
     self.params = values;
     NSMutableArray *params = [NSMutableArray arrayWithCapacity:[keys count]];
     for ( int i = 0; i < [keys count]-1; i++ ) {

@@ -45,7 +45,7 @@
 
 - (BOOL)isDirty
 {
-    return [oldValues_ count] > 0;
+    return [self.oldValues count] > 0;
 }
 
 - (BOOL)isEqualTo:(id)object
@@ -91,6 +91,7 @@
 - (void)setObject:(id)object forColumnName:(NSString*)columnName
 {
     PgSQLValue *aValue = [attributes_ objectForKey:columnName];
+    [self value:aValue willChangeForColumnName:columnName];
     Oid type;
     if ( aValue == nil ) {
         if ( (type = [self guessType:object]) == INVALID_OID ) return;
@@ -99,10 +100,8 @@
         type = aValue.type;
         [aValue setObject:object type:type];
     }
-    if ( [oldValues_ count] == 0 ) {
-        self.oldValues = [[attributes_ copy] autorelease];
-    }
     [attributes_ setObject:aValue forKey:columnName];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (id)objectForColumnName:(NSString*)columnName
@@ -114,13 +113,11 @@
 - (PgSQLValue*)valueToChangeforColumnName:(NSString*)columnName
 {
     PgSQLValue *aValue = [attributes_ objectForKey:columnName];
+    [self value:aValue willChangeForColumnName:columnName];
     if ( aValue == nil ) {
         aValue = [[[PgSQLValue alloc] init] autorelease];
     }
-    if ( [oldValues_ count] == 0 ) {
-        self.oldValues = [[attributes_ copy] autorelease];
-    }
-    [attributes_ setObject:aValue forKey:columnName];
+    [attributes_ setObject:aValue forKey:columnName];// not needed?
     return aValue;
 }
 
@@ -131,10 +128,9 @@
 
 - (void)setValue:(PgSQLValue*)value forColumnName:(NSString*)columnName
 {
-    if ( [oldValues_ count] == 0 ) {
-        oldValues_ = [[attributes_ copy] autorelease];
-    }
+    [self value:nil willChangeForColumnName:columnName];
     [attributes_ setObject:value forKey:columnName];
+    [self value:value didChangeForColumnName:columnName];
 }
 
 - (void)setBinary:(const char *)val ofType:(Oid)type forColumnName:(NSString*)columnName
@@ -147,6 +143,7 @@
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
     [aValue setBoolValue:val];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (BOOL)boolForColumnName:(NSString*)columnName
@@ -159,6 +156,7 @@
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
     [aValue setShortValue:val];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (int16_t)int16ForColumnName:(NSString*)columnName
@@ -171,6 +169,7 @@
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
     [aValue setIntValue:val];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (int32_t)int32ForColumnName:(NSString*)columnName
@@ -183,6 +182,7 @@
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
     [aValue setLongLongValue:val];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (int64_t)int64ForColumnName:(NSString*)columnName
@@ -195,6 +195,7 @@
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
     [aValue setFloatValue:val];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (float)floatForColumnName:(NSString*)columnName
@@ -207,6 +208,7 @@
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
     [aValue setDoubleValue:val];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (double)doubleForColumnName:(NSString*)columnName
@@ -219,6 +221,7 @@
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
     [aValue setDate:object];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (NSDate*)dateForColumnName:(NSString*)columnName
@@ -231,6 +234,7 @@
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
     [aValue setTime:object];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (NSDate*)timeForColumnName:(NSString*)columnName
@@ -243,6 +247,7 @@
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
     [aValue setTimestamp:object];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (NSDate*)timestampForColumnName:(NSString*)columnName
@@ -255,6 +260,7 @@
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
     [aValue setTimestampTZ:object];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (NSDate*)timestampTZForColumnName:(NSString*)columnName
@@ -266,7 +272,8 @@
 - (void)setVarchar:(NSString*)object forColumnName:(NSString*)columnName
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
-    [aValue setString:object];    
+    [aValue setString:object];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (NSString*)varcharForColumnName:(NSString*)columnName
@@ -278,7 +285,8 @@
 - (void)setText:(NSString*)object forColumnName:(NSString*)columnName
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
-    [aValue setText:object];    
+    [aValue setText:object];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (NSString*)textForColumnName:(NSString*)columnName
@@ -290,7 +298,8 @@
 - (void)setData:(NSData*)object forColumnName:(NSString*)columnName
 {
     PgSQLValue *aValue = [self valueToChangeforColumnName:columnName];
-    [aValue setData:object];  
+    [aValue setData:object];
+    [self value:aValue didChangeForColumnName:columnName];
 }
 
 - (NSData*)dataForColumnName:(NSString*)columnName
@@ -369,12 +378,16 @@
             [self className],self.tableName, self.pkeyName, self.pkeySequenceName ,attributes_];
 }
 
-- (void)valueWillChangeForColumnName:(NSString*)columnName
+- (void)value:(PgSQLValue*)oldValue willChangeForColumnName:(NSString*)columnName
 {
+    if ( [self.oldValues count] == 0 ) {
+        self.oldValues = self.attributes;
+    }
 }
 
-- (void)valueDidChangeForColumnName:(NSString*)columnName
+- (void)value:(PgSQLValue*)newValue didChangeForColumnName:(NSString*)columnName
 {
+    [attributes_ setObject:newValue forKey:columnName];
 }
 
 - (void)relatedValue:(PgSQLRecord*)aRecord willChangeForColumnName:(NSString*)columnName
