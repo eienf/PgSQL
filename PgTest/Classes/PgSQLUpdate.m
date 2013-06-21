@@ -45,17 +45,18 @@
     if ( record_.tableName == nil ) return nil;
     if ( record_.pkeyName == nil ) return nil;
     if ( [record_.attributes count] == 0 ) return nil;
-	if ( [record_.oldValues count] != 0 ) {
-		attr = record_.oldValues;
+    attr = record_.attributes;
+	if ( [record_.changedNames count] != 0 ) {
+        keys = [[record_.changedNames allObjects] mutableCopy];
+        [keys removeObject:record_.pkeyValue];
 	} else {
-		attr = record_.attributes;
+        keys = [NSMutableArray arrayWithCapacity:[attr count]];
+        [[attr allKeys] enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){
+            if ( ![obj isEqualToString:record_.pkeyName] ) {
+                [keys addObject:obj];
+            }
+        }];
 	}
-    keys = [NSMutableArray arrayWithCapacity:[attr count]];
-    [[attr allKeys] enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){
-        if ( ![obj isEqualToString:record_.pkeyName] ) {
-            [keys addObject:obj];
-        }
-    }];
     NSString *keyList = [keys componentsJoinedByString:@", "];
     [keys addObject:record_.pkeyName];
     values = [[record_.attributes objectsForKeys:keys notFoundMarker:[NSNull null]] mutableCopy];

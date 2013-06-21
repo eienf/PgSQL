@@ -13,13 +13,15 @@
 @interface PgSQLRecord : NSObject
 {
     NSMutableDictionary *attributes_; // NSString - PgSQLValue
-    NSDictionary *oldValues_;// PgSQLValue
+    NSDictionary *oldValues_;// NSString - PgSQLValue
+    NSMutableSet *changedNames_; // NSString
     NSString *tableName_;
     NSString *pkeyName_;
     NSString *pkeySequenceName_;
 }
 @property(nonatomic,retain,readwrite) NSMutableDictionary *attributes;// NSString
 @property(nonatomic,copy,readwrite) NSDictionary *oldValues;// PgSQLValue
+@property(nonatomic,retain,readwrite) NSMutableSet *changedNames; // NSString
 @property(nonatomic,copy,readwrite) NSString *tableName;
 @property(nonatomic,copy,readwrite) NSString *pkeyName;
 @property(nonatomic,copy,readwrite) NSString *pkeySequenceName;

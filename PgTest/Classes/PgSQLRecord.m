@@ -14,11 +14,13 @@
 
 @synthesize attributes = attributes_;// PgSQLValue
 @synthesize oldValues = oldValues_;// PgSQLValue
+@synthesize changedNames = changedNames_;
 @synthesize tableName = tableName_;
 @synthesize pkeyName = pkeyName_;
 @synthesize pkeySequenceName = pkeySequenceName_;
 
 - (void)dealloc {
+    self.changedNames = nil;
     self.attributes = nil;
     self.oldValues = nil;
     self.tableName = nil;
@@ -383,11 +385,15 @@
     if ( [self.oldValues count] == 0 ) {
         self.oldValues = self.attributes;
     }
+    if ( [self.changedNames count] == 0 ) {
+        changedNames_ = [[NSMutableSet alloc ] initWithCapacity:[self.attributes count]];
+    }
 }
 
 - (void)value:(PgSQLValue*)newValue didChangeForColumnName:(NSString*)columnName
 {
     [attributes_ setObject:newValue forKey:columnName];
+    [self.changedNames addObject:columnName];
 }
 
 - (void)relatedValue:(PgSQLRecord*)aRecord willChangeForColumnName:(NSString*)columnName
@@ -404,11 +410,13 @@
 {
     self.attributes = [[self.oldValues mutableCopy] autorelease];
     self.oldValues = nil;
+    self.changedNames = nil;
 }
 
 - (void)didSaveChanges
 {
     self.oldValues = nil;
+    self.changedNames = nil;
 }
 
 @end
