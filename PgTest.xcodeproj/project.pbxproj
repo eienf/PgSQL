@@ -53,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7B0841AA17757D8900260639 /* PgSQL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PgSQL.h; path = PgTest/Classes/PgSQL.h; sourceTree = "<group>"; };
 		7B5E269013FB7920007D9F5B /* PgTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PgTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B5E269413FB7920007D9F5B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		7B5E269713FB7920007D9F5B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -1581,6 +1582,7 @@
 				7BACAD03140905F100AE8C10 /* PgSQLContext.m */,
 				7BACAD0D140EB6C900AE8C10 /* PgSQLSingleCommand.h */,
 				7BACAD0E140EB6D300AE8C10 /* PgSQLSingleCommand.m */,
+				7B0841AA17757D8900260639 /* PgSQL.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
