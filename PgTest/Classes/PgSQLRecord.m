@@ -320,7 +320,11 @@
 
 - (NSString*)stringForColumnName:(NSString*)columnName
 {
-    return [self varcharForColumnName:columnName];   
+    NSString *aString = [self varcharForColumnName:columnName];
+    if ( aString == nil ) {
+        aString = @"";
+    }
+    return aString;
 }
 
 - (void)setNullforColumnName:(NSString*)columnName
