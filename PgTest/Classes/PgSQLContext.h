@@ -31,6 +31,7 @@
 - (void)addUpdatedObject:(PgSQLRecord*)anObject;
 - (void)addInsertedObject:(PgSQLRecord*)anObject;
 - (void)addDeletedObject:(PgSQLRecord*)anObject;
+- (void)removeUpdatedObject:(PgSQLRecord *)anObject;
 
 - (void)clear;
 - (BOOL)saveChanges;

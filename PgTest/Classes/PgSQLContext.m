@@ -180,4 +180,15 @@
 	}
 }
 
+- (void)removeUpdatedObject:(PgSQLRecord *)anObject
+{
+	NSUInteger index = [allObjects indexOfObject:anObject];
+	if ( index == NSNotFound ) {
+        return;
+	}
+	if ( [updatedSet containsIndex:index] ) {
+		[updatedSet removeIndex:index];
+	}
+}
+
 @end
