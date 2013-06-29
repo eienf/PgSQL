@@ -347,7 +347,7 @@
                        connection:(PgSQLConnection*)con
 {
     NSString *whereString = [NSString stringWithFormat:@"%@ = $1",pkeyName];
-	id param = [self valueforColumnName:pkeyName];
+	id param = [self valueforColumnName:fkeyName];
 	if ( param == nil ) return nil;
     PgSQLQuery *aQuery = [PgSQLQuery queryWithTable:tableName
                                               where:whereString
