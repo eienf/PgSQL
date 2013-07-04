@@ -16,6 +16,8 @@
 @synthesize recordClass = recordClass_;
 @synthesize orderBy = orderBy_;
 @synthesize tableName = tableName_;
+@synthesize limit;
+@synthesize offset;
 
 - (void)dealloc
 {
@@ -84,6 +86,26 @@
     return aCommand;
 }
 
++ (PgSQLQuery*)queryWithTable:(NSString*)tableName
+                        where:(NSString*)whereString
+                       params:(NSArray*)params
+                     forClass:(Class)recordClass
+                      orderBy:(NSString*)orderBy
+                        limit:(int32_t)limit
+                       offset:(int32_t)offset
+                   connection:(PgSQLConnection*)connection;
+{
+    PgSQLQuery *aCommand = [PgSQLQuery queryWithTable:tableName
+                                                where:whereString
+                                             forClass:recordClass
+                                              orderBy:orderBy
+                                           connection:connection];
+    aCommand.params = params;
+    aCommand.limit = limit;
+    return aCommand;
+    
+}
+
 - (PgSQLResult*)execute
 {
     NSString *sql;
@@ -94,6 +116,12 @@
     }
     if ( orderBy_ != nil ) {
         sql = [sql stringByAppendingFormat:@" ORDER BY %@",orderBy_];        
+    }
+    if ( limit > 0 ) {
+        sql = [sql stringByAppendingFormat:@" LIMIT %d",limit];
+    }
+    if ( offset > 0 ) {
+        sql = [sql stringByAppendingFormat:@" OFFSET %d",offset];
     }
     if ( [self isBinary] ) {
         return [PgSQLCommand executeBinaryFormat:sql params:params_ connection:conn_];

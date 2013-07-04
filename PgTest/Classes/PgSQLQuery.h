@@ -13,10 +13,14 @@
     Class recordClass_;
     NSString *orderBy_;
     NSString *tableName_;
+    int32_t limit;
+    int32_t offset;
 }
 @property(nonatomic,assign,readwrite) Class recordClass;
 @property(nonatomic,copy,readwrite) NSString *orderBy;
 @property(nonatomic,copy,readwrite) NSString *tableName;
+@property(nonatomic,assign,readwrite) int32_t limit;
+@property(nonatomic,assign,readwrite) int32_t offset;
 
 + (PgSQLQuery*)queryWithTable:(NSString*)tableName
                         where:(NSString*)whereString
@@ -34,6 +38,14 @@
                        params:(NSArray*)params
                      forClass:(Class)recordClass
                       orderBy:(NSString*)orderBy
+                   connection:(PgSQLConnection*)connection;
++ (PgSQLQuery*)queryWithTable:(NSString*)tableName
+                        where:(NSString*)whereString
+                       params:(NSArray*)params
+                     forClass:(Class)recordClass
+                      orderBy:(NSString*)orderBy
+                        limit:(int32_t)limit
+                       offset:(int32_t)offset
                    connection:(PgSQLConnection*)connection;
 
 - (NSArray*)queryRecords;
