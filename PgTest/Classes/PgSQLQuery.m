@@ -111,7 +111,7 @@
         return nil;   
     }
     if ( ![result resetRow] ) {
-        NSLog(@"%s () NO DATA AVAILABLE",__func__);
+        NSLog(@"%s NO DATA AVAILABLE in %@ where %@",__func__,self.tableName,self.whereStatement);
         return nil;   
     }
     NSMutableArray *anArray = [NSMutableArray arrayWithCapacity:result.numOfTuples];
