@@ -26,6 +26,7 @@
     self.tableName = nil;
     self.pkeyName = nil;
     self.pkeySequenceName = nil;
+    self.registeredObjects = nil;
     [super dealloc];
 }
 
@@ -33,6 +34,7 @@
     self = [super init];
     if (self) {
         self.attributes = [NSMutableDictionary dictionary];
+        self.registeredObjects = [NSMutableArray array];
     }
     return self;
 }
@@ -421,6 +423,25 @@
 {
     self.oldValues = nil;
     self.changedNames = nil;
+    [self propagateSequenceToObjects];
+}
+
+- (void)propagateSequence:(PgSQLRecord*)savedRecord
+{
+    
+}
+
+- (void)propagateSequenceToObjects
+{
+    for (PgSQLRecord *aRecord in self.registeredObjects) {
+        [aRecord propagateSequence:self];
+    }
+    [self.registeredObjects removeAllObjects];
+}
+
+- (void)registerObject:(PgSQLRecord*)anObject ForSequenceKey:(NSString*)aName
+{
+    [self.registeredObjects addObject:anObject];
 }
 
 @end

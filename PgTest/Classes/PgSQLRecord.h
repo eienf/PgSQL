@@ -18,6 +18,7 @@
     NSString *tableName_;
     NSString *pkeyName_;
     NSString *pkeySequenceName_;
+    NSMutableArray *registeredObjects_;
 }
 @property(nonatomic,retain,readwrite) NSMutableDictionary *attributes;// NSString
 @property(nonatomic,copy,readwrite) NSDictionary *oldValues;// PgSQLValue
@@ -28,6 +29,7 @@
 @property(nonatomic,assign,readonly) BOOL isDirty;
 @property(nonatomic,assign,readonly) BOOL isTemp;
 @property(nonatomic,retain,readonly) PgSQLValue *pkeyValue;
+@property(nonatomic,retain,readwrite) NSMutableArray *registeredObjects;// PgSQLRecord - NSString
 
 - (BOOL)isEqualTo:(id)object;
 - (NSNumber*)primaryKey;
@@ -87,5 +89,8 @@
 - (void)relatedValue:(PgSQLRecord*)aRecord didChangeForColumnName:(NSString*)columnName;
 - (void)revertChanges;
 - (void)didSaveChanges;
+- (void)propagateSequence:(PgSQLRecord*)savedRecord;
+- (void)propagateSequenceToObjects;
+- (void)registerObject:(PgSQLRecord*)anObject ForSequenceKey:(NSString*)aName;
 
 @end
