@@ -69,6 +69,7 @@
 - (void)setString:(NSString*)aString;
 - (void)setText:(NSString*)aString;
 - (void)setData:(NSData*)object;
+- (void)setNull;
 
 - (NSString*)description;
 - (BOOL)isNullValue;

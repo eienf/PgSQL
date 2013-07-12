@@ -70,7 +70,6 @@
         self.value = val;
         self.type = type;
     } else {
-        self.type = INVALID_OID;
         self.value = nil;
     }
 }
@@ -319,6 +318,11 @@
 - (NSString*)description
 {
     return [NSString stringWithFormat:@"<%@> %@:%@",[self className],[self oidName],self.value];
+}
+
+- (void)setNull
+{
+    self.value = nil;
 }
 
 @end

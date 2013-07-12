@@ -48,7 +48,7 @@
     attr = record_.attributes;
 	if ( [record_.changedNames count] != 0 ) {
         keys = [[record_.changedNames allObjects] mutableCopy];
-        [keys removeObject:record_.pkeyValue];
+        [keys removeObject:record_.pkeyName];
 	} else {
         keys = [NSMutableArray arrayWithCapacity:[attr count]];
         [[attr allKeys] enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){

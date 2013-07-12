@@ -128,9 +128,14 @@
 			[shouldInsert addObject:obj];
 		}
 		index = [allObjects indexOfObject:obj];
-		if ( index != NSNotFound ) {
-			[allObjects removeObjectAtIndex:index];
-		}
+        if ( index != NSNotFound ) {
+            if ( [insertedSet containsIndex:index] ) {
+                [insertedSet removeIndex:index];
+            }
+            if ( [updatedSet containsIndex:index] ) {
+                [updatedSet removeIndex:index];
+            }
+        }
 	}];
 	[deletedObjects addObjectsFromArray:shouldInsert];
 }
@@ -156,7 +161,12 @@
 
 - (void)addUpdatedObject:(PgSQLRecord*)anObject
 {
-	NSUInteger index = [self addNotCountainedObject:anObject];
+	NSUInteger index;
+    index = [deletedObjects indexOfObject:anObject];
+	if ( index != NSNotFound ) {
+        return;
+	}
+    index = [self addNotCountainedObject:anObject];
 	if ( ![insertedSet containsIndex:index] ) {
 		[updatedSet addIndex:index];
 	}
@@ -164,20 +174,34 @@
 
 - (void)addInsertedObject:(PgSQLRecord*)anObject
 {
-	NSUInteger index = [self addNotCountainedObject:anObject];
+	NSUInteger index;
+    index = [deletedObjects indexOfObject:anObject];
+	if ( index != NSNotFound ) {
+        return;
+	}
+    index = [self addNotCountainedObject:anObject];
 	[insertedSet addIndex:index];
+    if ( [updatedSet containsIndex:index] ) {
+        [updatedSet removeIndex:index];
+    }
 }
 
 - (void)addDeletedObject:(PgSQLRecord*)anObject
 {
-	NSUInteger index = [deletedObjects indexOfObject:anObject];
+	NSUInteger index;
+    index = [deletedObjects indexOfObject:anObject];
 	if ( index == NSNotFound ) {
 		[deletedObjects addObject:anObject];
 	}
 	index = [allObjects indexOfObject:anObject];
 	if ( index != NSNotFound ) {
-		[allObjects removeObjectAtIndex:index];
-	}
+        if ( [insertedSet containsIndex:index] ) {
+            [insertedSet removeIndex:index];
+        }
+        if ( [updatedSet containsIndex:index] ) {
+            [updatedSet removeIndex:index];
+        }
+    }
 }
 
 - (void)removeUpdatedObject:(PgSQLRecord *)anObject
@@ -189,6 +213,22 @@
 	if ( [updatedSet containsIndex:index] ) {
 		[updatedSet removeIndex:index];
 	}
+}
+
+- (void)removeInsertedObject:(PgSQLRecord*)anObject
+{
+	NSUInteger index = [allObjects indexOfObject:anObject];
+	if ( index == NSNotFound ) {
+        return;
+	}
+    if ( [insertedSet containsIndex:index] ) {
+        [insertedSet removeIndex:index];
+    }
+}
+
+- (void)removeDeletedObjects:(PgSQLRecord*)anObject
+{
+    [deletedObjects removeObject:anObject];
 }
 
 @end

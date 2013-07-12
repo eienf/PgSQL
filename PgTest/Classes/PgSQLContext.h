@@ -16,6 +16,7 @@
 	NSMutableArray *deletedObjects;
 	NSMutableIndexSet *insertedSet;
 	NSMutableIndexSet *updatedSet;
+	NSMutableIndexSet *deletedSet;
 }
 @property(nonatomic,retain,readwrite) PgSQLConnection *connection;
 @property(nonatomic,retain,readwrite) NSMutableArray *allObjects;
@@ -32,6 +33,8 @@
 - (void)addInsertedObject:(PgSQLRecord*)anObject;
 - (void)addDeletedObject:(PgSQLRecord*)anObject;
 - (void)removeUpdatedObject:(PgSQLRecord *)anObject;
+- (void)removeInsertedObject:(PgSQLRecord*)anObject;
+- (void)removeDeletedObjects:(PgSQLRecord*)anObject;
 
 - (void)clear;
 - (BOOL)saveChanges;

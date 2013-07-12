@@ -84,12 +84,20 @@
         int *paramLengths = (int*)malloc(nNumParams*sizeof(int));
         int *paramFormats = (int*)malloc(nNumParams*sizeof(int));
         for ( int i = 0; i < nNumParams; i++ ) {
-            size_t size = [(PgSQLValue*)[anArray objectAtIndex:i] getBufferSize];
+            PgSQLValue *aValue = (PgSQLValue*)[anArray objectAtIndex:i];
+            if ( aValue.isNullValue ) {
+                paramValues[i] = nil;
+                paramTypes[i] = 0;
+                paramLengths[i] = 0;
+                paramFormats[i] = 1;
+                continue;
+            }
+            size_t size = [aValue getBufferSize];
             paramValues[i] = malloc(size);
-            [(PgSQLValue*)[anArray objectAtIndex:i] getBinary:paramValues[i] maxSize:size];
-            paramTypes[i] = [(PgSQLValue*)[anArray objectAtIndex:i] type];
-            paramLengths[i] = (int)[(PgSQLValue*)[anArray objectAtIndex:i] getBufferSize];
-            switch ( [(PgSQLValue*)[anArray objectAtIndex:i] type] ) {
+            [aValue getBinary:paramValues[i] maxSize:size];
+            paramTypes[i] = aValue.type;
+            paramLengths[i] = (int)[aValue getBufferSize];
+            switch ( aValue.type ) {
                 case VARCHAROID: case TEXTOID:
                     paramLengths[i]--; // string length
             }

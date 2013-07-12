@@ -37,7 +37,7 @@
 
 + (PgSQLDelete*)deleteCommandFrom:(NSArray*)anArray connection:(PgSQLConnection*)con
 {
-    __block NSString *tableName;
+    __block NSString *tableName = nil;
     __block BOOL failed = NO;
     [anArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if ( [tableName length] == 0 ) {
