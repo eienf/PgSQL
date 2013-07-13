@@ -51,7 +51,7 @@
 
 - (BOOL)run
 {
-    if ( [self.commands count] == 0 ) return NO;
+    if ( [self.commands count] == 0 ) return YES;
     if ( ![self beginTransaction] ) return NO;
     if ( ![self execute] ) {
         [self rollback];
@@ -63,9 +63,12 @@
 
 - (BOOL)beginTransaction
 {
+    NSLog(@"%s (%ld)",__func__,(unsigned long)self.commands.count);
     PgSQLResult *aResult = [PgSQLCommand executeString:@"BEGIN TRANSACTION;" connection:self.conn];
     BOOL flag = [aResult isOK];
-    NSLog(@"%s [%d] %@",__func__,[aResult resultStatus],[aResult resultMessage]);
+    if ( !flag ) {
+        NSLog(@"%s [%d] %@",__func__,[aResult resultStatus],[aResult resultMessage]);
+    }
     [aResult clear];
     return flag;    
 }
