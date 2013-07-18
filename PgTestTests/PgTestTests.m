@@ -44,8 +44,8 @@
 }
 - (NSString*)description
 {
-    return [NSString stringWithFormat:@"%d/%d/%d %d:%d:%d",
-            [self year],[self month],[self day],[self hour],[self minute],[self second]];
+    return [NSString stringWithFormat:@"%ld/%ld/%ld %ld:%ld:%ld",
+            (long)[self year],(long)[self month],(long)[self day],(long)[self hour],(long)[self minute],[self second]];
 }
 - (BOOL)isZero:(NSUInteger)uflags
 {
@@ -266,7 +266,7 @@
         [res clear];
 
         aQuery = [PgSQLQuery queryWithTable:@"author"
-                                      where:@"author_id > $1" 
+                                      where:@"author_id >= $1"
                                      params:[NSArray arrayWithObject:[PgSQLValue valueWithObject:[NSNumber numberWithInt:100] type:INT4OID]]
                                    forClass:nil
                                     orderBy:@"author_id"
@@ -324,7 +324,7 @@
 
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id = 201" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        NSLog(@"after inserted [%d]",[anArray count]);
+        NSLog(@"after inserted [%ld]",[anArray count]);
         STAssertEquals([anArray count], (NSUInteger)1, @"after inserted author_id");
         bRecord = [anArray objectAtIndex:0];
         NSLog(@"    %@",bRecord);
@@ -343,7 +343,7 @@
 
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id = 201" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        NSLog(@"after updated [%d]",[anArray count]);
+        NSLog(@"after updated [%ld]",[anArray count]);
         STAssertEquals([anArray count], (NSUInteger)1, @"after updated author_id");
         bRecord = [anArray objectAtIndex:0];
         NSLog(@"    %@",bRecord);
@@ -410,20 +410,20 @@
             goto FINISH;
         }
         flag = [aTransaction execute];
-        STAssertTrue(flag, @"execuete transaction");
+        STAssertTrue(flag, @"execute transaction");
         if ( !flag ) {
             [aTransaction rollback];
             goto FINISH;
         }
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 300" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        NSLog(@"after insert [%d]",[anArray count]);
+        NSLog(@"after insert [%ld]",[anArray count]);
         STAssertEquals([anArray count], (NSUInteger)2, @"after updated count");
         NSLog(@"    %@",anArray);
         [aTransaction rollback];
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 300" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        NSLog(@"after rollback [%d]",[anArray count]);
+        NSLog(@"after rollback [%ld]",[anArray count]);
         STAssertEquals([anArray count], (NSUInteger)0, @"after rollback count");
         // COMMIT TEST
         aTransaction = [PgSQLTransaction transactionWith:insertList connection:con];
@@ -440,14 +440,14 @@
         }
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 300" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        NSLog(@"after insert [%d]",[anArray count]);
+        NSLog(@"after insert [%ld]",[anArray count]);
         STAssertEquals([anArray count], (NSUInteger)2, @"after updated count");
         NSLog(@"    %@",anArray);
         flag = [aTransaction commitEditing];
         STAssertTrue(flag, @"commit transaction");
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 300" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        NSLog(@"after commit [%d]",[anArray count]);
+        NSLog(@"after commit [%ld]",[anArray count]);
         STAssertEquals([anArray count], (NSUInteger)2, @"after commit count");
     } else {
         STAssertFalse(YES, @"connection failed");
@@ -533,14 +533,14 @@ FINISH:
         where = [NSString stringWithFormat:@"id > %d",lastid];
         aQuery = [PgSQLQuery queryWithTable:@"basic" where:where forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        NSLog(@"after inserted [%d]",[anArray count]);
+        NSLog(@"after inserted [%ld]",[anArray count]);
         STAssertEquals([anArray count], (NSUInteger)2, @"after inserted count");
         NSLog(@"    %@",anArray);
         flag = [aTransaction commitEditing];
         STAssertTrue(flag, @"commit transaction");
         aQuery = [PgSQLQuery queryWithTable:@"basic" where:where forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        NSLog(@"after commit [%d]",[anArray count]);
+        NSLog(@"after commit [%ld]",[anArray count]);
         STAssertEquals([anArray count], (NSUInteger)2, @"after commit count");
 
         // Update record
@@ -558,7 +558,7 @@ FINISH:
         where = [NSString stringWithFormat:@"id = %d",lastid+2];
         aQuery = [PgSQLQuery queryWithTable:@"basic" where:where forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
-        NSLog(@"after update [%d]",[anArray count]);
+        NSLog(@"after update [%ld]",[anArray count]);
         STAssertEquals([anArray count], (NSUInteger)1, @"after updated count");
         bRecord = [anArray objectAtIndex:0];
         NSLog(@"    %@",bRecord);
@@ -610,14 +610,14 @@ FINISH:
         aQuery = [PgSQLQuery queryWithTable:@"author" where:@"author_id > 100" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
         for ( PgSQLRecord *aRecord in anArray ) {
-            NSLog(@"AUTHOR = %@",aRecord);
+//            NSLog(@"AUTHOR = %@",aRecord);
             NSArray *relations = [aRecord toManyRelationships:@"comic"
                                                      withFkey:@"author_id"
                                                      forClass:nil
                                                       forPkey:@"author_id"
                                                    connection:con];
             for ( PgSQLRecord *comic in relations ) {
-                NSLog(@"COMIC = %@",comic);
+//                NSLog(@"COMIC = %@",comic);
                 STAssertEquals([aRecord int32ForColumnName:@"author_id"], 
                                [comic int32ForColumnName:@"author_id"],
                                @"same key(pkey==fkey)");
@@ -626,13 +626,13 @@ FINISH:
         aQuery = [PgSQLQuery queryWithTable:@"comic" where:@"author_id > 100" forClass:nil orderBy:nil connection:con];
         anArray = [aQuery queryRecords];
         for ( PgSQLRecord *aRecord in anArray ) {
-            NSLog(@"COMIC = %@",aRecord);
+//            NSLog(@"COMIC = %@",aRecord);
             PgSQLRecord *author = [aRecord toOneRelationship:@"author"
                                                     withPkey:@"author_id"
                                                     forClass:nil
                                                      forFkey:@"author_id"
                                                   connection:con];
-            NSLog(@"AUHOR = %@",author);
+//            NSLog(@"AUHOR = %@",author);
             STAssertEquals([aRecord int32ForColumnName:@"author_id"], 
                            [author int32ForColumnName:@"author_id"],
                            @"same key(pkey==fkey)");
@@ -640,6 +640,99 @@ FINISH:
         [con disconnect];
     }
     [con release];
+}
+
+- (void)test10_Delete
+{
+    NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
+    PgSQLConnectionInfo *info = [PgSQLConnectionInfo connectionInfoWithURL:aUrl];
+    PgSQLConnection *con = [[PgSQLConnection alloc] init];
+    con.connectionInfo = info;
+    [con connect];
+    if ( con.isConnected ) {
+        BOOL flag;
+        PgSQLTransaction *aTransaction;
+        PgSQLRecord *aRecord;
+        PgSQLResult *res;
+        NSArray *anArray;
+        NSMutableArray *recordArray;
+        
+        // Prepare Records
+        recordArray = [NSMutableArray arrayWithCapacity:2];
+        aRecord = [[[PgSQLRecord alloc] init] autorelease];
+        aRecord.tableName = @"author";
+        aRecord.pkeyName = @"author_id";
+        [aRecord setInt32:301 forColumnName:@"author_id"];
+        [recordArray addObject:aRecord];
+        aRecord = nil;
+        aRecord = [[[PgSQLRecord alloc] init] autorelease];
+        aRecord.tableName = @"author";
+        aRecord.pkeyName = @"author_id";
+        [aRecord setInt32:302 forColumnName:@"author_id"];
+        [recordArray addObject:aRecord];
+
+        // Update record
+        anArray = [PgSQLDelete deleteCommandsFrom:recordArray connection:con];
+        aTransaction = [PgSQLTransaction transactionWith:anArray connection:con];
+        flag = [aTransaction run];
+        STAssertTrue(flag, @"run transaction");
+        if ( !flag ) {
+            goto FINISH;
+        }
+        
+        // check result
+        res = [PgSQLCommand executeString:@"select count(*) from author" connection:con];
+        STAssertNotNil(res,@"res must be allocated.");
+        if ( res != nil ) {
+            char *result;
+            result = [res getValue];
+            printf("result = %s\n",result);
+            STAssertTrue(result!=NULL&&strcmp(result,"8")==0,@"count does not match");
+            [res clear];
+        }
+        
+    } else {
+        STAssertFalse(YES, @"connection failed");
+    }
+FINISH:
+	[con disconnect];
+    [con release];
+
+}
+
+- (void)test11_Bytea
+{
+    NSURL *aUrl = [[NSBundle mainBundle] URLForResource:@"TestDB" withExtension:@"plist"];
+    PgSQLConnectionInfo *info = [PgSQLConnectionInfo connectionInfoWithURL:aUrl];
+    PgSQLConnection *con = [[PgSQLConnection alloc] init];
+    con.connectionInfo = info;
+    [con connect];
+    if ( con.isConnected ) {
+        // SELECT * FROM test1 WHERE t = $1
+       PgSQLQuery *aQuery = [PgSQLQuery queryWithTable:@"test1"
+                                                 where:@"i = 1"
+                                                params:nil
+                                              forClass:nil
+                                               orderBy:nil
+                                            connection:con];
+        PgSQLResult *aResult = [aQuery execute];
+        if ( aResult.isOK ) {
+            NSArray *anArray = [aQuery queryRecords];
+            for (PgSQLRecord *aRecord in anArray) {
+                NSData *aData = [aRecord dataForColumnName:@"b"];
+                printf("<%ld>\n",aData.length);
+                STAssertTrue(aData.length == 20, @"data length should be equal");
+            }
+        } else {
+            STAssertFalse(YES, @"queary failed");
+        }
+    } else {
+        STAssertFalse(YES, @"connection failed");
+    }
+FINISH:
+	[con disconnect];
+    [con release];
+    
 }
 
 @end

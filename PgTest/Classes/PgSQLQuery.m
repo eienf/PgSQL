@@ -155,13 +155,15 @@
             if ( [result getIsNull] ) {
                 continue;
             }
+            
             char *value = [result getValue:row column:col];
+            size_t length = [result getLength:row column:col];
             int type = [result getType:col];
 			if ( [result getIsNull:row column:col] ) {
                 PgSQLValue *aValue = [PgSQLValue nullValue];
                 [dict setObject:aValue forKey:[nameList objectAtIndex:col]];
 			} else if ( isBinary ) {
-                PgSQLValue *aValue = [PgSQLValue valueWithBinary:value type:type];
+                PgSQLValue *aValue = [PgSQLValue valueWithBinary:value type:type length:length];
                 [dict setObject:aValue forKey:[nameList objectAtIndex:col]];
             } else {
                 PgSQLValue *aValue = [PgSQLValue valueWithBinary:value type:TEXTOID];

@@ -12,6 +12,7 @@
 
 #ifndef INT8OID
 #define INVALID_OID (-1)
+#define  BYTEAOID   17
 #define  INT8OID   20
 #define  INT2OID   21
 #define  INT4OID   23
@@ -38,6 +39,8 @@
 + (PgSQLValue*)valueWithBinary:(const char *)val type:(Oid)type;
 - (id)initWithObject:(id)val type:(Oid)type;
 + (PgSQLValue*)valueWithObject:(id)val type:(Oid)type;
+- (id)initWithBinary:(const char *)val type:(Oid)type length:(size_t)length;
++ (PgSQLValue*)valueWithBinary:(const char *)val type:(Oid)type length:(size_t)length;
 + (PgSQLValue*)nullValue;
 - (void)setObject:(id)val type:(Oid)type;
 - (size_t)getBinarySize;

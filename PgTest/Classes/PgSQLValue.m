@@ -54,6 +54,33 @@
     return [aValue autorelease];
 }
 
+- (id)initWithBinary:(const char *)val type:(Oid)type length:(size_t)length
+{
+    if ( type == BYTEAOID ) {
+        self = [super init];
+        if (self) {
+            self.value = [PgSQLCoder decodeBlob:val size:length];
+            if ( self.value != nil ) {
+                self.type = type;
+            } else {
+                self.type = INVALID_OID;
+            }
+        }
+        return self;
+    }
+    return [self initWithBinary:val type:type];
+}
+
++ (PgSQLValue*)valueWithBinary:(const char *)val type:(Oid)type length:(size_t)length
+{
+    if ( type == BYTEAOID ) {
+        PgSQLValue *aValue = [[PgSQLValue alloc] initWithBinary:val type:type length:length];
+        return [aValue autorelease];
+    }
+    return [self valueWithBinary:val type:type];
+}
+
+
 + (PgSQLValue*)nullValue
 {
     PgSQLValue *aValue = [[PgSQLValue alloc] init];
@@ -94,6 +121,7 @@
             return 8; 
         case VARCHAROID:    // NSString
         case TEXTOID:       // NSString
+        case BYTEAOID:
         default:
             return -1;
     }
@@ -104,6 +132,8 @@
     switch (type_) {
         case VARCHAROID: case TEXTOID:
             return [(NSString*)value_ lengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1;
+        case BYTEAOID:
+            return [(NSData*)value_ length];
     }
     return [self getBinarySize];
 }
@@ -271,16 +301,20 @@
 
 - (void)setData:(NSData*)object
 {
+    self.value = [[object copy] autorelease];
+    self.type = BYTEAOID;
 }
 
 - (NSData*)dataValue
 {
-    return nil;
+    return self.value;
 }
 
 - (NSString*)oidName
 {
     switch (type_) {
+        case BYTEAOID:
+            return @"BYTEA";
         case BOOLOID:
             return @"BOOL";
         case INT2OID:

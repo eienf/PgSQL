@@ -62,7 +62,8 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     NSMutableArray *result = [NSMutableArray array];
     [anArray enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){
-        NSString *tableName = [obj tableName];
+        NSString *tableName;
+        tableName = [obj tableName];
         NSMutableArray *arrayForTable = [dict objectForKey:tableName];
         if ( arrayForTable == nil ) {
             arrayForTable = [NSMutableArray array];
@@ -71,7 +72,8 @@
         [arrayForTable addObject:obj];
     }];
     [dict enumerateKeysAndObjectsUsingBlock:^(id key,id obj,BOOL *stop){
-        PgSQLDelete *anObject = [PgSQLDelete deleteCommandFrom:obj connection:con];
+        PgSQLDelete *anObject;
+        anObject = [PgSQLDelete deleteCommandFrom:obj connection:con];
         if ( anObject != nil ) {
             [result addObject:anObject];
         }
@@ -89,7 +91,8 @@
     NSMutableArray *paramList = [NSMutableArray arrayWithCapacity:[records_ count]];
     NSMutableArray *anArray = [NSMutableArray arrayWithCapacity:[records_ count]];
     [records_ enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){
-        [paramList addObject:aRecord.pkeyValue];
+        PgSQLRecord *theRecord = (PgSQLRecord*)obj;
+        [paramList addObject:theRecord.pkeyValue];
         [anArray addObject:[NSString stringWithFormat:@"$%ld",idx+1]];
     }];
     NSString *pkeyList = [anArray componentsJoinedByString:@" , "];
