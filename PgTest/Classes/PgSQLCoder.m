@@ -133,6 +133,12 @@ static NSInteger secondsFromGMT_ = 32400;
     if ( buff == NULL || maxSize == 0 ) return NULL;
     //
     switch(type){
+        case BYTEAOID:
+        {
+            if ( ![value isKindOfClass:[NSData class]]) return NULL;
+            [self encodeBlob:value intoBuffer:buff maxSize:maxSize];
+            return buff;
+        }
         case BOOLOID:
         {
             BOOL val = [value boolValue];
