@@ -769,7 +769,7 @@
 				7B5E2B2F13FD44B0007D9F5B /* sqlda.h */,
 			);
 			name = include;
-			path = /Library/PostgreSQL/9.1/include;
+			path = /Library/PostgreSQL/9.2/include;
 			sourceTree = "<absolute>";
 		};
 		7B5E291D13FD44AF007D9F5B /* libpq */ = {

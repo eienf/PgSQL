@@ -18,6 +18,7 @@
 @synthesize tableName = tableName_;
 @synthesize pkeyName = pkeyName_;
 @synthesize pkeySequenceName = pkeySequenceName_;
+@synthesize registeredObjects = registeredObjects_;
 
 - (void)dealloc {
     self.changedNames = nil;
