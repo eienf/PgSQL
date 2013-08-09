@@ -93,7 +93,7 @@
     [records_ enumerateObjectsUsingBlock:^(id obj,NSUInteger idx,BOOL *stop){
         PgSQLRecord *theRecord = (PgSQLRecord*)obj;
         [paramList addObject:theRecord.pkeyValue];
-        [anArray addObject:[NSString stringWithFormat:@"$%ld",idx+1]];
+        [anArray addObject:[NSString stringWithFormat:@"$%ld",(long)idx+1]];
     }];
     NSString *pkeyList = [anArray componentsJoinedByString:@" , "];
     NSString *sql;

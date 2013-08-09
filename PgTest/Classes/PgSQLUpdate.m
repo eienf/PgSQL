@@ -47,7 +47,7 @@
     if ( [record_.attributes count] == 0 ) return nil;
     attr = record_.attributes;
 	if ( [record_.changedNames count] != 0 ) {
-        keys = [[record_.changedNames allObjects] mutableCopy];
+        keys = [[[record_.changedNames allObjects] mutableCopy] autorelease];
         [keys removeObject:record_.pkeyName];
 	} else {
         keys = [NSMutableArray arrayWithCapacity:[attr count]];
@@ -59,7 +59,7 @@
 	}
     NSString *keyList = [keys componentsJoinedByString:@", "];
     [keys addObject:record_.pkeyName];
-    values = [[record_.attributes objectsForKeys:keys notFoundMarker:[NSNull null]] mutableCopy];
+    values = [[[record_.attributes objectsForKeys:keys notFoundMarker:[NSNull null]] mutableCopy] autorelease];
     [values addObject:record_.pkeyValue];
     self.params = values;
     NSMutableArray *params = [NSMutableArray arrayWithCapacity:[keys count]];
@@ -67,7 +67,7 @@
         [params addObject:[NSString stringWithFormat:@"$%d",i+1]];
     }
     NSString *paramList = [params componentsJoinedByString:@", "];
-    NSString *whereStatement = [NSString stringWithFormat:@"%@ = $%ld",record_.pkeyName,(NSUInteger)[keys count]];
+    NSString *whereStatement = [NSString stringWithFormat:@"%@ = $%ld",record_.pkeyName,(unsigned long)[keys count]];
     sql = [NSString stringWithFormat:@"UPDATE %@ SET ( %@ ) = ( %@ ) WHERE %@;",
            record_.tableName, keyList, paramList, whereStatement ];
 //    NSLog(@"%@",sql);
