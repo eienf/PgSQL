@@ -28,6 +28,7 @@
 #endif
 
 @interface PgSQLValue : NSObject
+    <NSCopying>
 {
     id value_;
     Oid type_;

@@ -387,10 +387,21 @@
             [self className],self.tableName, self.pkeyName, self.pkeySequenceName ,attributes_];
 }
 
+- (NSDictionary*)makeDeepCopyAttribute:(NSDictionary*)inDict
+{
+    NSMutableDictionary *outDict = [NSMutableDictionary dictionaryWithCapacity:[inDict count]];
+    for (NSString *aKey in inDict) {
+        PgSQLValue *aValue = [inDict objectForKey:aKey];
+        PgSQLValue *copiedValue = [aValue copy];
+        [outDict setObject:copiedValue forKey:aKey];
+    }
+    return outDict;
+}
+
 - (void)value:(PgSQLValue*)oldValue willChangeForColumnName:(NSString*)columnName
 {
     if ( [self.oldValues count] == 0 ) {
-        self.oldValues = self.attributes;
+        self.oldValues = [self makeDeepCopyAttribute:self.attributes];
     }
     if ( [self.changedNames count] == 0 ) {
         changedNames_ = [[NSMutableSet alloc ] initWithCapacity:[self.attributes count]];

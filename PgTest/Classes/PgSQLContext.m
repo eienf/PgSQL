@@ -42,6 +42,9 @@
 
 - (void)clear
 {
+    for (PgSQLRecord *aRecord in [self updatedObjects]) {
+        [aRecord revertChanges];
+    }
 	self.allObjects = [NSMutableArray array];
 	self.deletedObjects = [NSMutableArray array];
 	[insertedSet removeAllIndexes];

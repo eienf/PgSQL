@@ -42,6 +42,14 @@
     return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+    PgSQLValue *aValue = [[PgSQLValue allocWithZone:zone] init];
+    aValue.value = [self.value copyWithZone:zone];
+    aValue.type = self.type;
+    return aValue;
+}
+
 + (PgSQLValue*)valueWithBinary:(const char *)val type:(Oid)type
 {
     PgSQLValue *aValue = [[PgSQLValue alloc] initWithBinary:val type:type];
