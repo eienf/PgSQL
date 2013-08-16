@@ -44,7 +44,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    PgSQLValue *aValue = [[PgSQLValue allocWithZone:zone] init];
+    PgSQLValue *aValue = [[[self class] allocWithZone:zone] init];
     aValue.value = [self.value copyWithZone:zone];
     aValue.type = self.type;
     return aValue;
