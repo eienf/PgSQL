@@ -174,7 +174,8 @@ static pthread_mutex_t mutex;
 
 - (PgSQLResult*)execute
 {
-    pthread_mutex_lock(&mutex);
+//    pthread_mutex_lock(&mutex);
+    @synchronized(conn_) {
     if ( [params_ count] == 0 ) {
         return [PgSQLCommand executeString:format_ connection:conn_];
     }
@@ -183,7 +184,8 @@ static pthread_mutex_t mutex;
     } else {
         return [PgSQLCommand executeTextFormat:format_ params:params_ connection:conn_];
     }
-    pthread_mutex_unlock(&mutex);
+    }
+//    pthread_mutex_unlock(&mutex);
 }
 
 
