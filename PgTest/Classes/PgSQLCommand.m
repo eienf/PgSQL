@@ -8,6 +8,7 @@
 
 #import "PgSQLCommand.h"
 #import "PgSQLValue.h"
+#import <pthread.h>
 
 @interface NSString (cString)
 - (char *)cStringWithMalloc;
@@ -24,6 +25,9 @@
 }
 @end
 
+
+static pthread_mutex_t mutex;
+
 @implementation PgSQLCommand
 
 @synthesize isBinary = isBinary_;
@@ -31,6 +35,10 @@
 @synthesize format = format_;
 @synthesize params = params_;
 
++ (void)initialize
+{
+    pthread_mutex_init(&mutex, NULL);
+}
 
 - (id)init {
     self = [super init];
@@ -166,6 +174,7 @@
 
 - (PgSQLResult*)execute
 {
+    pthread_mutex_lock(&mutex);
     if ( [params_ count] == 0 ) {
         return [PgSQLCommand executeString:format_ connection:conn_];
     }
@@ -174,6 +183,7 @@
     } else {
         return [PgSQLCommand executeTextFormat:format_ params:params_ connection:conn_];
     }
+    pthread_mutex_unlock(&mutex);
 }
 
 
