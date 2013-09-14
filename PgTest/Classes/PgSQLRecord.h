@@ -82,6 +82,12 @@
                        forClass:(Class)recordClass 
                         forPkey:(NSString*)fkeyName
                      connection:(PgSQLConnection*)con;
+- (NSArray*)toManyRelationships:(NSString*)tableName
+                       withFkey:(NSString*)fkeyName
+                       forClass:(Class)recordClass
+                        forPkey:(NSString*)pkeyName
+                        orderBy:(NSString*)orderBy
+                     connection:(PgSQLConnection*)con;
 
 - (void)value:(PgSQLValue*)oldValue willChangeForColumnName:(NSString*)columnName;
 - (void)value:(PgSQLValue*)newValue didChangeForColumnName:(NSString*)columnName;
