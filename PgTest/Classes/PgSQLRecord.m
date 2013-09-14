@@ -369,6 +369,21 @@
                         forPkey:(NSString*)pkeyName
                      connection:(PgSQLConnection*)con
 {
+    return [self toManyRelationships:tableName
+                            withFkey:fkeyName
+                            forClass:recordClass
+                             forPkey:pkeyName
+                             orderBy:pkeyName
+                          connection:con];
+}
+
+- (NSArray*)toManyRelationships:(NSString*)tableName
+                       withFkey:(NSString*)fkeyName
+                       forClass:(Class)recordClass
+                        forPkey:(NSString*)pkeyName
+                        orderBy:(NSString*)orderBy
+                     connection:(PgSQLConnection*)con
+{
     NSString *whereString = [NSString stringWithFormat:@"%@ = $1",fkeyName];
 	id param = [self valueforColumnName:pkeyName];
 	if ( param == nil ) return [NSArray array];
@@ -376,7 +391,7 @@
                                               where:whereString
                                              params:[NSArray arrayWithObject:param]
                                            forClass:recordClass
-                                            orderBy:nil
+                                            orderBy:orderBy
                                          connection:con];
     return [aQuery queryRecords];
 }
