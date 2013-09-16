@@ -407,7 +407,7 @@
     NSMutableDictionary *outDict = [NSMutableDictionary dictionaryWithCapacity:[inDict count]];
     for (NSString *aKey in inDict) {
         PgSQLValue *aValue = [inDict objectForKey:aKey];
-        PgSQLValue *copiedValue = [aValue copy];
+        PgSQLValue *copiedValue = [[aValue copy] autorelease];
         [outDict setObject:copiedValue forKey:aKey];
     }
     return outDict;
