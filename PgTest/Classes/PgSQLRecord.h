@@ -86,6 +86,7 @@
                        withFkey:(NSString*)fkeyName
                        forClass:(Class)recordClass
                         forPkey:(NSString*)pkeyName
+                      filtering:(NSString*)filtering
                         orderBy:(NSString*)orderBy
                      connection:(PgSQLConnection*)con;
 

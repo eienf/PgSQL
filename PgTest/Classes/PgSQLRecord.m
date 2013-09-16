@@ -373,6 +373,7 @@
                             withFkey:fkeyName
                             forClass:recordClass
                              forPkey:pkeyName
+                           filtering:nil
                              orderBy:pkeyName
                           connection:con];
 }
@@ -381,10 +382,14 @@
                        withFkey:(NSString*)fkeyName
                        forClass:(Class)recordClass
                         forPkey:(NSString*)pkeyName
+                      filtering:(NSString*)filtering
                         orderBy:(NSString*)orderBy
                      connection:(PgSQLConnection*)con
 {
     NSString *whereString = [NSString stringWithFormat:@"%@ = $1",fkeyName];
+    if ( filtering ) {
+        whereString = [NSString stringWithFormat:@"(%@) and (%@)",whereString,filtering];
+    }
 	id param = [self valueforColumnName:pkeyName];
 	if ( param == nil ) return [NSArray array];
     PgSQLQuery *aQuery = [PgSQLQuery queryWithTable:tableName
