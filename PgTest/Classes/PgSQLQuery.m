@@ -123,10 +123,12 @@
     if ( offset > 0 ) {
         sql = [sql stringByAppendingFormat:@" OFFSET %d",offset];
     }
+    @synchronized(conn_) {
     if ( [self isBinary] ) {
         return [PgSQLCommand executeBinaryFormat:sql params:params_ connection:conn_];
     } else {
         return [PgSQLCommand executeTextFormat:sql params:params_ connection:conn_];
+    }
     }
     return nil;
 }
