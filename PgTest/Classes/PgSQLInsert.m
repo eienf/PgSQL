@@ -61,7 +61,7 @@
 - (PgSQLResult*)executeSequence
 {
     NSString *sql = [NSString stringWithFormat:@"SELECT currval('%@');",record_.pkeySequenceName];
-    PgSQLResult *aResult = [PgSQLCommand executeBinaryFormat:sql params:params_ connection:conn_];
+    PgSQLResult *aResult = [PgSQLCommand executeBinaryFormat:sql params:nil connection:conn_];
     char *val = [aResult getValue:0 column:0];
     int type = [aResult getType:0];
     [record_ setBinary:val ofType:type forColumnName:record_.pkeyName];
