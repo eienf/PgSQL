@@ -446,7 +446,9 @@
 
 - (void)revertChanges
 {
-    self.attributes = [[self.oldValues mutableCopy] autorelease];
+    if ( self.oldValues ) {
+        self.attributes = [[self.oldValues mutableCopy] autorelease];
+    }
     self.oldValues = nil;
     self.changedNames = nil;
 }
